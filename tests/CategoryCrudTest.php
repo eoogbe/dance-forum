@@ -10,7 +10,7 @@ class CategoryCrudTest extends TestCase
 
   public function testIndexCategory()
   {
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
 
     $this->visit('/')
       ->see($category->name);
@@ -18,7 +18,7 @@ class CategoryCrudTest extends TestCase
 
   public function testShowCategory()
   {
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
 
     $this->visit("/categories/{$category->slug}")
       ->see($category->name);

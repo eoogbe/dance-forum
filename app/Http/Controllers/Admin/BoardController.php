@@ -19,7 +19,7 @@ class BoardController extends Controller
    */
   public function index()
   {
-    return view('admin.boards.index', ['categories' => Category::all()]);
+    return view('admin.boards.index', ['categories' => Category::orderBy('position')->get()]);
   }
 
   /**
@@ -55,7 +55,7 @@ class BoardController extends Controller
     $board = $category->boards()->create([
       'name' => $request->name,
       'description' => $request->description,
-      'position' => $category->nextPosition(),
+      'position' => $category->nextBoardPosition(),
     ]);
 
     return redirect()->route('admin.boards.show', compact('board'));
@@ -83,7 +83,7 @@ class BoardController extends Controller
   {
     if ($request->category_id !== $board->category_id) {
       $category = Category::findOrFail($request->category_id);
-      $position = $category->nextPosition();
+      $position = $category->nextBoardPosition();
       $category->boards()->save($board);
     } else {
       $position = $board->position;
@@ -119,7 +119,7 @@ class BoardController extends Controller
    * @return \Illuminate\Http\Response
    */
   public function position(Request $request, Board $board)
-  {  
+  {
     if ($request->exists('first')) {
       $swapBoard = $board->category->firstBoard();
     } else if ($request->exists('up')) {

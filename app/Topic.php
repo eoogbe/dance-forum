@@ -20,7 +20,7 @@ class Topic extends Model
    */
   public function posts()
   {
-    return $this->hasMany(Post::class)->orderBy('created_at');
+    return $this->hasMany(Post::class)->oldest();
   }
 
   /**
@@ -28,7 +28,7 @@ class Topic extends Model
    */
   public function lastPost()
   {
-    return $this->hasMany(Post::class)->orderBy('created_at', 'desc')->first();
+    return $this->hasMany(Post::class)->latest()->first();
   }
 
   /**

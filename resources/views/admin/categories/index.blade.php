@@ -19,8 +19,7 @@ Manage Categories
     <thead>
       <tr>
         <th scope="col">Name</th>
-        <th scope="col">Edit</th>
-        <th scope="col">Delete</th>
+        <th scope="col">Settings</th>
       </tr>
     </thead>
     <tbody>
@@ -31,8 +30,20 @@ Manage Categories
               {{ $category->name }}
             </a>
           </td>
-          <td><a href="{{ route('admin.categories.edit', compact('category')) }}">edit</a></td>
           <td>
+            <form method="post" action="{{ route('admin.categories.position', compact('category')) }}">
+              {!! method_field('PUT') !!}
+              {!! csrf_field() !!}
+              @unless ($category->isFirst())
+                <button name="first" type="submit">first</button>
+                <button name="up" type="submit">up</button>
+              @endunless
+              @unless ($category->isLast())
+                <button name="down" type="submit">down</button>
+                <button name="last" type="submit">last</button>
+              @endunless
+            </form>
+            <a href="{{ route('admin.categories.edit', compact('category')) }}">edit</a>
             @include('common.delete', [
               'deletePath' => route('admin.categories.destroy', compact('category')),
             ])

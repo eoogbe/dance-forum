@@ -11,9 +11,10 @@ A example forum so I can learn [Laravel](http://laravel.com).
 - WYSIWYG for formatted text
 - Categories
   - CRUD operations (admin)
+  - order (admin)
 - Boards
   - CRUD operations (admin)
-  - order
+  - order (admin)
 - Topics
   - create
   - edit (admin)
@@ -26,8 +27,6 @@ A example forum so I can learn [Laravel](http://laravel.com).
 
 ## TODO
 
-- Ajax for ordering boards
-- order categories
 - moderators
 - pagination
 - views

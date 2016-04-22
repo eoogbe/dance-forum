@@ -26,6 +26,9 @@ $factory->define(App\Category::class, function (Faker\Generator $faker) {
     'slug' => function ($category) {
       return str_slug($category['name']);
     },
+    'position' => function () {
+      return App\Category::nextPosition();
+    }
   ];
 });
 
@@ -40,7 +43,7 @@ $factory->define(App\Board::class, function (Faker\Generator $faker) {
       return factory(App\Category::class)->create()->id;
     },
     'position' => function ($board) {
-      return App\Category::find($board['category_id'])->nextPosition();
+      return App\Category::find($board['category_id'])->nextBoardPosition();
     }
   ];
 });

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPositionToBoardsTable extends Migration
+class AddPositionToCategoriesTable extends Migration
 {
   /**
    * Run the migrations.
@@ -12,9 +12,8 @@ class AddPositionToBoardsTable extends Migration
    */
   public function up()
   {
-    Schema::table('boards', function (Blueprint $table) {
-      $table->integer('position')->default(-1);
-      $table->unique(['category_id', 'position']);
+    Schema::table('categories', function (Blueprint $table) {
+      $table->integer('position')->default(-1)->unique();
     });
   }
 
@@ -25,7 +24,7 @@ class AddPositionToBoardsTable extends Migration
    */
   public function down()
   {
-    Schema::table('boards', function (Blueprint $table) {
+    Schema::table('categories', function (Blueprint $table) {
       $table->dropColumn('position');
     });
   }

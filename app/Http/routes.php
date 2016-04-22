@@ -32,6 +32,10 @@ Route::group([
   'prefix' => 'admin',
 ], function() {
   Route::get('', 'BoardController@index');
+  Route::put('categories/{category}/position', [
+    'as' => 'admin.categories.position',
+    'uses' => 'CategoryController@position'
+  ]);
   Route::put('boards/{board}/position', [
     'as' => 'admin.boards.position',
     'uses' => 'BoardController@position'

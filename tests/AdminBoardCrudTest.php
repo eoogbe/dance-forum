@@ -91,7 +91,7 @@ class AdminBoardCrudTest extends TestCase
   public function testNewBoardNameDuplicate()
   {
     $user = App\Role::where('name', 'admin')->first()->users()->first();
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
     $board = factory(App\Board::class)->create();
 
     $this->actingAs($user)
@@ -179,7 +179,7 @@ class AdminBoardCrudTest extends TestCase
   public function testPositionBoardFirst()
   {
     $user = App\Role::where('name', 'admin')->first()->users()->first();
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
     $board = factory(App\Board::class)->create(['category_id' => $category->id]);
 
     $this->actingAs($user)
@@ -188,6 +188,58 @@ class AdminBoardCrudTest extends TestCase
         $this->press('first');
       })
       ->within('tbody tr:first-child', function() use ($board) {
+        $this->see($board->name);
+      });
+  }
+
+  public function testPositionBoardUp()
+  {
+    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $category = App\Category::sortedFirst();
+    $board = factory(App\Board::class)->create(['category_id' => $category->id]);
+
+    $this->actingAs($user)
+      ->visit("/admin/categories/{$category->slug}")
+      ->within('tbody tr:last-child', function() {
+        $this->press('up');
+      })
+      ->within('tbody tr:nth-last-child(2)', function() use ($board) {
+        $this->see($board->name);
+      });
+  }
+
+  public function testPositionBoardDown()
+  {
+    $category = App\Category::sortedFirst();
+    factory(App\Board::class)->create(['category_id' => $category->id]);
+
+    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $board = $category->firstBoard();
+
+    $this->actingAs($user)
+      ->visit("/admin/categories/{$category->slug}")
+      ->within('tbody tr:first-child', function() {
+        $this->press('down');
+      })
+      ->within('tbody tr:nth-child(2)', function() use ($board) {
+        $this->see($board->name);
+      });
+  }
+
+  public function testPositionBoardLast()
+  {
+    $category = App\Category::sortedFirst();
+    factory(App\Board::class)->create(['category_id' => $category->id]);
+
+    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $board = $category->firstBoard();
+
+    $this->actingAs($user)
+      ->visit("/admin/categories/{$category->slug}")
+      ->within('tbody tr:first-child', function() {
+        $this->press('last');
+      })
+      ->within('tbody tr:last-child', function() use ($board) {
         $this->see($board->name);
       });
   }

@@ -18,7 +18,7 @@ class CategoryController extends Controller
    */
   public function index()
   {
-    return view('admin.categories.index', ['categories' => Category::all()]);
+    return view('admin.categories.index', ['categories' => Category::orderBy('position')->get()]);
   }
 
   /**
@@ -52,6 +52,7 @@ class CategoryController extends Controller
   {
     $category = Category::create([
       'name' => $request->name,
+      'position' => Category::nextPosition(),
     ]);
 
     return redirect()->route('admin.categories.show', compact('category'));
@@ -93,6 +94,36 @@ class CategoryController extends Controller
   public function destroy(Category $category)
   {
     $category->delete();
+
+    return redirect()->route('admin.categories.index');
+  }
+
+  /**
+   * Update the position of the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request $request
+   * @param  Category  $category
+   * @return \Illuminate\Http\Response
+   */
+  public function position(Request $request, Category $category)
+  {
+    if ($request->exists('first')) {
+      $swapCategory = Category::sortedFirst();
+    } else if ($request->exists('up')) {
+      $swapCategory = $category->prevCategory();
+    } else if ($request->exists('down')) {
+      $swapCategory = $category->nextCategory();
+    } else if ($request->exists('last')) {
+      $swapCategory = Category::sortedLast();
+    } else {
+      return redirect()->route('admin.categories.index');
+    }
+
+    $swapPosition = $swapCategory->position;
+    $categoryPosition = $category->position;
+    $category->update(['position' => -1]);
+    $swapCategory->update(['position' => $categoryPosition]);
+    $category->update(['position' => $swapPosition]);
 
     return redirect()->route('admin.categories.index');
   }

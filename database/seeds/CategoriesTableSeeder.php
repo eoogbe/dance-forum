@@ -13,7 +13,7 @@ class CategoriesTableSeeder extends Seeder
    */
   public function run()
   {
-    $category = Category::create(['name' => 'Social Dance']);
+    $category = Category::create(['name' => 'Social Dance', 'position' => 0]);
     $category->boards()->createMany([
       [
         'name' => 'Waltz',

@@ -16,7 +16,7 @@ class CategoryController extends Controller
    */
   public function index()
   {
-    return view('categories.index', ['categories' => Category::all()]);
+    return view('categories.index', ['categories' => Category::orderBy('position')->get()]);
   }
 
   /**

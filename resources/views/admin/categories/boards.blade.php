@@ -1,7 +1,7 @@
 <table>
   <thead>
     <tr>
-      <th scope="col">Name</th>
+      <th scope="col">Board</th>
       <th scope="col">Topics</th>
       <th scope="col">Posts</th>
       <th scope="col">Settings</th>

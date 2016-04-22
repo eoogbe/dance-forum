@@ -13,7 +13,33 @@ class Category extends Model
    *
    * @var array
    */
-  protected $fillable = ['name'];
+  protected $fillable = ['name', 'position'];
+
+  /**
+   * Get the first category when sorted by position.
+   */
+  public static function sortedFirst()
+  {
+    return static::orderBy('position')->first();
+  }
+
+  /**
+   * Get the first category when sorted by position.
+   */
+  public static function sortedLast()
+  {
+    return static::orderBy('position', 'desc')->first();
+  }
+
+  /**
+   * Get the next position of a category.
+   */
+  public static function nextPosition()
+  {
+    $category = static::sortedLast();
+
+    return $category ? $category->position + 1 : 0;
+  }
 
   /**
    * Get all the boards for the category.
@@ -64,29 +90,9 @@ class Category extends Model
   }
 
   /**
-   * Get the position of the first board for the category.
-   */
-  public function firstPosition()
-  {
-    $board = $this->firstBoard();
-
-    return $board ? $board->position : null;
-  }
-
-  /**
-   * Get the position of the last board for the category.
-   */
-  public function lastPosition()
-  {
-    $board = $this->lastBoard();
-
-    return $board ? $board->position : null;
-  }
-
-  /**
    * Get the next position of a board for the category.
    */
-  public function nextPosition()
+  public function nextBoardPosition()
   {
     $board = $this->lastBoard();
 
@@ -107,5 +113,37 @@ class Category extends Model
   public function hasBoard($board)
   {
     return $this->id == $board->category_id;
+  }
+
+  /**
+   * Get the previous category.
+   */
+  public function prevCategory()
+  {
+    return static::orderBy('position', 'desc')->where('position', '<', $this->position)->first();
+  }
+
+  /**
+   * Get the next category.
+   */
+  public function nextCategory()
+  {
+    return static::orderBy('position')->where('position', '>', $this->position)->first();
+  }
+
+  /**
+   * Check if the category is the first one.
+   */
+  public function isFirst()
+  {
+    return !static::where('position', '<', $this->position)->exists();
+  }
+
+  /**
+   * Check if the category is the last one.
+   */
+  public function isLast()
+  {
+    return !static::where('position', '>', $this->position)->exists();
   }
 }

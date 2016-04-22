@@ -36,7 +36,7 @@ class Board extends Model
    */
   public function lastPost()
   {
-    return $this->posts()->orderBy('created_at', 'desc')->first();
+    return $this->posts()->latest()->first();
   }
 
   /**
@@ -76,7 +76,7 @@ class Board extends Model
   }
 
   /**
-   * Get the previous board for the board.
+   * Get the previous board.
    */
   public function prevBoard()
   {
@@ -84,7 +84,7 @@ class Board extends Model
   }
 
   /**
-   * Get the next board for the board.
+   * Get the next board.
    */
   public function nextBoard()
   {
@@ -96,7 +96,7 @@ class Board extends Model
    */
   public function isFirst()
   {
-    return $this->category->firstPosition() === $this->position;
+    return !$this->category->boards()->where('position', '<', $this->position)->exists();
   }
 
   /**
@@ -104,6 +104,6 @@ class Board extends Model
    */
   public function isLast()
   {
-    return $this->category->lastPosition() === $this->position;
+    return !$this->category->boards()->where('position', '>', $this->position)->exists();
   }
 }

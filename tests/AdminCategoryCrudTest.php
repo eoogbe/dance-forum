@@ -11,7 +11,7 @@ class AdminCategoryCrudTest extends TestCase
   public function testIndexCategory()
   {
     $user = App\Role::where('name', 'admin')->first()->users()->first();
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
 
     $this->actingAs($user)
       ->visit('/admin/categories')
@@ -30,7 +30,7 @@ class AdminCategoryCrudTest extends TestCase
   public function testShowCategory()
   {
     $user = App\Role::where('name', 'admin')->first()->users()->first();
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
 
     $this->actingAs($user)
       ->visit("/admin/categories/{$category->slug}")
@@ -40,7 +40,7 @@ class AdminCategoryCrudTest extends TestCase
   public function testShowCategoryWithoutAdmin()
   {
     $user = factory(App\User::class)->create();
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
 
     $this->actingAs($user);
     $response = $this->call('GET', "/admin/categories/{$category->slug}");
@@ -83,7 +83,7 @@ class AdminCategoryCrudTest extends TestCase
   public function testNewCategoryNameDuplicate()
   {
     $user = App\Role::where('name', 'admin')->first()->users()->first();
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
 
     $this->actingAs($user)
       ->visit('/admin/categories/create')
@@ -106,7 +106,7 @@ class AdminCategoryCrudTest extends TestCase
   {
     $user = App\Role::where('name', 'admin')->first()->users()->first();
 
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
     $updatedCategory = factory(App\Category::class)->make();
 
     $this->actingAs($user)
@@ -119,7 +119,7 @@ class AdminCategoryCrudTest extends TestCase
   public function testEditCategoryWithoutAdmin()
   {
     $user = factory(App\User::class)->create();
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
 
     $this->actingAs($user);
     $response = $this->call('GET', "/admin/categories/{$category->slug}/edit");
@@ -129,11 +129,83 @@ class AdminCategoryCrudTest extends TestCase
   public function testDeleteCategory()
   {
     $user = App\Role::where('name', 'admin')->first()->users()->first();
-    $category = App\Category::first();
+    $category = App\Category::sortedFirst();
 
     $this->actingAs($user)
       ->visit('/admin/categories')
       ->press('delete')
       ->dontSee($category->name);
+  }
+
+  public function testPositionCategoryFirst()
+  {
+    factory(App\Category::class)->create();
+    factory(App\Category::class)->create();
+
+    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $category = App\Category::sortedLast();
+
+    $this->actingAs($user)
+      ->visit('/admin/categories')
+      ->within('tbody tr:last-child', function() {
+        $this->press('first');
+      })
+      ->within('tbody tr:first-child', function() use ($category) {
+        $this->see($category->name);
+      });
+  }
+
+  public function testPositionCategoryUp()
+  {
+    factory(App\Category::class)->create();
+    factory(App\Category::class)->create();
+
+    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $category = App\Category::sortedLast();
+
+    $this->actingAs($user)
+      ->visit('/admin/categories')
+      ->within('tbody tr:last-child', function() {
+        $this->press('up');
+      })
+      ->within('tbody tr:nth-last-child(2)', function() use ($category) {
+        $this->see($category->name);
+      });
+  }
+
+  public function testPositionCategoryDown()
+  {
+    factory(App\Category::class)->create();
+    factory(App\Category::class)->create();
+
+    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $category = App\Category::sortedFirst();
+
+    $this->actingAs($user)
+      ->visit('/admin/categories')
+      ->within('tbody tr:first-child', function() {
+        $this->press('down');
+      })
+      ->within('tbody tr:nth-child(2)', function() use ($category) {
+        $this->see($category->name);
+      });
+  }
+
+  public function testPositionCategoryLast()
+  {
+    factory(App\Category::class)->create();
+    factory(App\Category::class)->create();
+
+    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $category = App\Category::sortedFirst();
+
+    $this->actingAs($user)
+      ->visit('/admin/categories')
+      ->within('tbody tr:first-child', function() {
+        $this->press('last');
+      })
+      ->within('tbody tr:last-child', function() use ($category) {
+        $this->see($category->name);
+      });
   }
 }
