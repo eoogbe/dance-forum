@@ -19,24 +19,27 @@ A example forum so I can learn [Laravel](http://laravel.com).
   - create
   - edit (admin)
   - delete (admin)
+  - pagination
 - Posts
   - create
   - edit (author or admin)
   - soft delete (author or admin)
   - restore deleted posts (admin)
+  - pagination
 
 ## TODO
 
 - moderators
-- pagination
 - views
 - pin topics
 - lock topics
 - hide topics
+- undo/redo delete
 - user profiles
 - subscriptions
 - remove account
 - approval
 - report spam
 - ban users
+- search
 - CSS

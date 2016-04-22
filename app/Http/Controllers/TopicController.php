@@ -28,7 +28,9 @@ class TopicController extends Controller
   */
   public function show(Topic $topic)
   {
-    return view('topics.show', compact('topic'));
+    $posts = $topic->paginatedPosts();
+
+    return view('topics.show', compact('topic', 'posts'));
   }
 
   /**

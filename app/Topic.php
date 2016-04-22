@@ -20,7 +20,7 @@ class Topic extends Model
    */
   public function posts()
   {
-    return $this->hasMany(Post::class)->oldest();
+    return $this->hasMany(Post::class);
   }
 
   /**
@@ -40,6 +40,22 @@ class Topic extends Model
   }
 
   /**
+   * Get all the posts written for the topic including the trashed ones.
+   */
+  public function postsWithTrashed()
+  {
+    return $this->posts()->withTrashed()->oldest();
+  }
+
+  /**
+   * Get a paginator for all the posts written for the topic including the trashed ones.
+   */
+  public function paginatedPosts()
+  {
+    return $this->postsWithTrashed()->paginate();
+  }
+
+  /**
    * Get the number of posts for the topic.
    */
   public function postCount()
@@ -52,7 +68,7 @@ class Topic extends Model
    */
   public function firstPost()
   {
-    return $this->posts()->first();
+    return $this->posts()->oldest()->first();
   }
 
   /**

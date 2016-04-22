@@ -28,8 +28,9 @@
     </ul>
   </header>
 
+  {!! $posts->links() !!}
   <ol>
-    @foreach ($topic->posts()->withTrashed()->get() as $post)
+    @foreach ($posts as $post)
       <li id="post-{{ $post->id }}">
         <article>
           <footer>
@@ -86,5 +87,6 @@
       </li>
     @endforeach
   </ol>
+  {!! $posts->links() !!}
 </section>
 @endsection

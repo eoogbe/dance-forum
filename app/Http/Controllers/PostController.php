@@ -53,7 +53,11 @@ class PostController extends Controller
       'parent_id' => $request->parent_id,
     ]);
 
-    return redirect(route('topics.show', compact('topic'))."#post-{$post->id}");
+    $posts = $topic->paginatedPosts();
+    $posts->setPath(route('topics.show', compact('topic')));
+    $posts->fragment("post-{$post->id}");
+
+    return redirect($posts->url($posts->lastPage()));
   }
 
   /**
@@ -84,7 +88,12 @@ class PostController extends Controller
       'content' => $request->content,
     ]);
 
-    return redirect(route('topics.show', ['topic' => $post->topic])."#post-{$post->id}");
+    $posts = $post->topic->paginatedPosts();
+    $posts->setPath(route('topics.show', ['topic' => $post->topic]));
+    $posts->fragment("post-{$post->id}");
+    $page = ceil($post->offset() / $posts->perPage());
+
+    return redirect($posts->url($page));
   }
 
   /**
@@ -114,6 +123,11 @@ class PostController extends Controller
     $this->authorize($post);
     $post->restore();
 
-    return redirect(route('topics.show', ['topic' => $post->topic])."#post-{$post->id}");
+    $posts = $post->topic->paginatedPosts();
+    $posts->setPath(route('topics.show', ['topic' => $post->topic]));
+    $posts->fragment("post-{$post->id}");
+    $page = ceil($post->offset() / $posts->perPage());
+
+    return redirect($posts->url($page));
   }
 }

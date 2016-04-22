@@ -18,37 +18,35 @@
     @endif
   </header>
 
-  @if ($board->topics()->exists())
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Topic</th>
-          <th scope="col">Latest</th>
-          <th scope="col">Posts</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach ($board->sortedTopics as $topic)
-        <tr>
-          <td>
-            <p>@include('topics.link')</p>
-            <p>created by <cite>{{ $topic->authorName() }}</cite></p>
-          </td>
-          <td>
-            @if ($topic->lastPost())
-              @include('posts.link', ['post' => $topic->lastPost()])
-              by <cite>{{ $topic->lastPost()->authorName() }}</cite>
-            @else
-              None
-            @endif
-          </td>
-          <td>{{ $topic->postCount() }}</td>
-        </tr>
-        @endforeach
-      </tbody>
-    </table>
-  @else
-    <p>No topics</p>
-  @endif
+  {!! $topics->links() !!}
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Topic</th>
+        <th scope="col">Latest</th>
+        <th scope="col">Posts</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach ($topics as $topic)
+      <tr>
+        <td>
+          <p>@include('topics.link')</p>
+          <p>created by <cite>{{ $topic->authorName() }}</cite></p>
+        </td>
+        <td>
+          @if ($topic->lastPost())
+            @include('posts.link', ['post' => $topic->lastPost()])
+            by <cite>{{ $topic->lastPost()->authorName() }}</cite>
+          @else
+            None
+          @endif
+        </td>
+        <td>{{ $topic->postCount() }}</td>
+      </tr>
+      @endforeach
+    </tbody>
+  </table>
+  {!! $topics->links() !!}
 </section>
 @endsection

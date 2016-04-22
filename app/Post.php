@@ -62,4 +62,15 @@ class Post extends Model
    {
      return $this->author->name;
    }
+
+   /**
+    * Get the offset of the post in its topic.
+    */
+   public function offset()
+   {
+     return $this->topic
+      ->postsWithTrashed()
+      ->where('created_at', '<=', $this->created_at)
+      ->count();
+   }
 }
