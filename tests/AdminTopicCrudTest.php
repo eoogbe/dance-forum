@@ -20,7 +20,8 @@ class AdminTopicCrudTest extends TestCase
       ->visit("/topics/{$topic->slug}")
       ->dontSeeLink('edit')
       ->dontSee('delete')
-      ->dontSee('toggle pin');
+      ->dontSee('lock')
+      ->dontSee('pin');
   }
 
   public function testEditTopic()
@@ -80,7 +81,7 @@ class AdminTopicCrudTest extends TestCase
         $this->see($topic2->name);
       })
       ->visit("/topics/{$topic->slug}")
-      ->press('toggle pin')
+      ->press('pin')
       ->visit("/boards/{$topic->board->slug}")
       ->within('tbody tr:first-child', function () use ($topic) {
         $this->see($topic->name);
@@ -99,10 +100,47 @@ class AdminTopicCrudTest extends TestCase
 
     $this->actingAs($user)
       ->visit("/topics/{$topic->slug}")
-      ->press('toggle pin')
+      ->press('unpin')
       ->visit("/boards/{$topic->board->slug}")
       ->within('tbody tr:last-child', function () use ($topic) {
         $this->see($topic->name);
       });
+  }
+
+  public function testLockTopic()
+  {
+    $admin = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = factory(App\User::class)->create();
+
+    $topic = factory(App\Topic::class)->create();
+    $topic->posts()->save(factory(App\Post::class)->make());
+
+    $this->actingAs($admin)
+      ->visit("/topics/{$topic->slug}")
+      ->press('lock')
+      ->visit("/topics/{$topic->slug}")
+      ->see('reply')
+      ->actingAs($user)
+      ->visit("/topics/{$topic->slug}")
+      ->dontSee('reply');
+  }
+
+  public function testUnlockTopic()
+  {
+    $admin = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = factory(App\User::class)->create();
+
+    $topic = factory(App\Topic::class)->create();
+    $topic->posts()->save(factory(App\Post::class)->make());
+
+    $permission = App\Permission::where('name', "createPost.topic.{$topic->id}")->first();
+    App\Role::where('name', 'member')->first()->permissions()->detach($permission);
+
+    $this->actingAs($admin)
+      ->visit("/topics/{$topic->slug}")
+      ->press('unlock')
+      ->actingAs($user)
+      ->visit("/topics/{$topic->slug}")
+      ->see('reply');
   }
 }

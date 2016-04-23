@@ -26,6 +26,7 @@ class AddPositionToBoardsTable extends Migration
   public function down()
   {
     Schema::table('boards', function (Blueprint $table) {
+      $table->dropUnique(['category_id', 'position']);
       $table->dropColumn('position');
     });
   }

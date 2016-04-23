@@ -30,6 +30,8 @@ class PostController extends Controller
    */
   public function create(Request $request, Topic $topic)
   {
+    $this->authorize('createPost', $topic);
+
     $parentPost = $topic->posts()->find($request->input('parent_id'));
 
     return view('posts.create', [
@@ -48,6 +50,8 @@ class PostController extends Controller
    */
   public function store(PostRequest $request, Topic $topic)
   {
+    $this->authorize('createPost', $topic);
+
     $post = $request->user()->posts()->create([
       'topic_id' => $topic->id,
       'content' => $request->content,
@@ -65,7 +69,7 @@ class PostController extends Controller
    */
   public function edit(Post $post)
   {
-    $this->authorize($post);
+    $this->authorize('update', $post);
 
     return view('posts.edit', compact('post'));
   }

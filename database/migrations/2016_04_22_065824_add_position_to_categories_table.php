@@ -25,6 +25,7 @@ class AddPositionToCategoriesTable extends Migration
   public function down()
   {
     Schema::table('categories', function (Blueprint $table) {
+      $table->dropUnique(['position']);
       $table->dropColumn('position');
     });
   }

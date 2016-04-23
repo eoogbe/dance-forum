@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Topic;
+use App\Role;
+use App\Permission;
 use App\Http\Requests\UpdateTopicRequest;
 use App\Http\Controllers\Controller;
 
@@ -52,14 +54,55 @@ class TopicController extends Controller
   }
 
   /**
-   * Update the pinned status of the specified resource in storage.
+   * Pins the specified resource.
    *
    * @param  Topic  $topic
    * @return \Illuminate\Http\Response
    */
-  public function pinned(Topic $topic)
+  public function pin(Topic $topic)
   {
-    $topic->update(['pinned_at' => $topic->pinned_at ? null : Carbon::now()]);
+    $topic->update(['pinned_at' => Carbon::now()]);
+
+    return redirect()->route('boards.show', ['board' => $topic->board]);
+  }
+
+  /**
+   * Unpins the specified resource.
+   *
+   * @param  Topic  $topic
+   * @return \Illuminate\Http\Response
+   */
+  public function unpin(Topic $topic)
+  {
+    $topic->update(['pinned_at' => null]);
+
+    return redirect()->route('boards.show', ['board' => $topic->board]);
+  }
+
+  /**
+   * Locks the specified resource.
+   *
+   * @param  Topic  $topic
+   * @return \Illuminate\Http\Response
+   */
+  public function lock(Topic $topic)
+  {
+    $permission = Permission::where('name', "createPost.topic.{$topic->id}")->first();
+    Role::where('name', 'member')->first()->permissions()->detach($permission);
+
+    return redirect()->route('boards.show', ['board' => $topic->board]);
+  }
+
+  /**
+   * Unlocks the specified resource.
+   *
+   * @param  Topic  $topic
+   * @return \Illuminate\Http\Response
+   */
+  public function unlock(Topic $topic)
+  {
+    $permission = Permission::where('name', "createPost.topic.{$topic->id}")->first();
+    Role::where('name', 'member')->first()->permissions()->attach($permission);
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
   }

@@ -40,9 +40,21 @@ Route::group([
     'as' => 'admin.boards.position',
     'uses' => 'BoardController@position'
   ]);
-  Route::put('topics/{topic}/pinned', [
-    'as' => 'admin.topics.pinned',
-    'uses' => 'TopicController@pinned'
+  Route::post('topics/{topic}/pin', [
+    'as' => 'admin.topics.pin',
+    'uses' => 'TopicController@pin'
+  ]);
+  Route::post('topics/{topic}/unpin', [
+    'as' => 'admin.topics.unpin',
+    'uses' => 'TopicController@unpin'
+  ]);
+  Route::post('topics/{topic}/lock', [
+    'as' => 'admin.topics.lock',
+    'uses' => 'TopicController@lock'
+  ]);
+  Route::post('topics/{topic}/unlock', [
+    'as' => 'admin.topics.unlock',
+    'uses' => 'TopicController@unlock'
   ]);
   Route::resource('categories', 'CategoryController');
   Route::resource('boards', 'BoardController');

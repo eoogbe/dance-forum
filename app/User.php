@@ -69,7 +69,7 @@ class User extends Authenticatable
    */
   private function parsePermissionNames($name)
   {
-    $names = [$name];
+    $names = ['*', $name];
 
     for ($i = strpos($name, '.'); $i !== false; $i = strpos($name, '.', $i + 1)) {
       $names[] = substr($name, 0, $i);

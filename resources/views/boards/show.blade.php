@@ -33,6 +33,11 @@
       <tr>
         <td>
           <p>
+            @if ($topic->isLocked())
+              locked
+            @endif
+          </p>
+          <p>
             @if ($topic->isPinned())
               pinned
             @endif

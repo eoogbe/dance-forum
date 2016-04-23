@@ -12,18 +12,6 @@ class PostPolicy
   use HandlesAuthorization;
 
   /**
-   * Determine if the given user can edit the given post.
-   *
-   * @param  User  $user
-   * @param  Post  $post
-   * @return bool
-   */
-  public function edit(User $user, Post $post)
-  {
-    return $user->hasPermission("edit.post.{$post->id}");
-  }
-
-  /**
    * Determine if the given user can update the given post.
    *
    * @param  User  $user

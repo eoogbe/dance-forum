@@ -13,9 +13,11 @@
     <h2>{{ $topic->name }}</h2>
 
     <ul>
-      @if (Auth::check())
-        <li><a href="{{ route('topics.posts.create', compact('topic')) }}">reply</a></li>
-      @endif
+      <li>
+        @can('createPost', $topic)
+          <a href="{{ route('topics.posts.create', compact('topic')) }}">reply</a>
+        @endcan
+      </li>
 
       @role('admin')
         <li><a href="{{ route('admin.topics.edit', compact('topic')) }}">edit</a></li>
@@ -25,11 +27,30 @@
           ])
         </li>
         <li>
-          <form method="post" action="{{ route('admin.topics.pinned', compact('topic')) }}">
-            {!! method_field('PUT') !!}
-            {!! csrf_field() !!}
-            <button type="submit">toggle pin</button>
-          </form>
+          @if ($topic->isLocked())
+            <form method="post" action="{{ route('admin.topics.unlock', compact('topic')) }}">
+              {!! csrf_field() !!}
+              <button type="submit">unlock</button>
+            </form>
+          @else
+            <form method="post" action="{{ route('admin.topics.lock', compact('topic')) }}">
+              {!! csrf_field() !!}
+              <button type="submit">lock</button>
+            </form>
+          @endif
+        </li>
+        <li>
+          @if ($topic->isPinned())
+            <form method="post" action="{{ route('admin.topics.unpin', compact('topic')) }}">
+              {!! csrf_field() !!}
+              <button type="submit">unpin</button>
+            </form>
+          @else
+            <form method="post" action="{{ route('admin.topics.pin', compact('topic')) }}">
+              {!! csrf_field() !!}
+              <button type="submit">pin</button>
+            </form>
+          @endif
         </li>
       @endif
     </ul>
@@ -67,12 +88,14 @@
                   </li>
                 @endcan
               @else
-                <li>
-                  <a href="{{ route('topics.posts.create', ['topic' => $topic, 'parent_id' => $post->id]) }}">
-                    reply
-                  </a>
-                </li>
-                @can('edit', $post)
+                @can('createPost', $topic)
+                  <li>
+                    <a href="{{ route('topics.posts.create', ['topic' => $topic, 'parent_id' => $post->id]) }}">
+                      reply
+                    </a>
+                  </li>
+                @endcan
+                @can('update', $post)
                   <li><a href="{{ route('posts.edit', compact('post')) }}">edit</a></li>
                 @endcan
                 @can('destroy', $post)

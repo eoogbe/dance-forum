@@ -6,6 +6,8 @@ use Blade;
 use Illuminate\Support\ServiceProvider;
 
 use App\User;
+use App\Role;
+use App\Topic;
 use App\Post;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,11 +27,16 @@ class AppServiceProvider extends ServiceProvider
       $user->roles()->create([
         'name' => "user.{$user->id}"
       ]);
+      
+      $user->roles()->attach(Role::where('name', 'member')->first());
+    });
+
+    Topic::created(function ($topic) {
+      Role::where('name', 'member')->first()->createPermissions(["createPost.topic.{$topic->id}"]);
     });
 
     Post::created(function ($post) {
       $post->author->createPermissions([
-        "edit.post.{$post->id}",
         "update.post.{$post->id}",
         "destroy.post.{$post->id}",
       ]);

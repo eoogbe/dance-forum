@@ -139,4 +139,14 @@ class Topic extends Model
   {
     return !is_null($this->pinned_at);
   }
+
+  /**
+   * Check if the topic is locked.
+   */
+  public function isLocked()
+  {
+    return !Role::where('name', 'member')
+      ->first()
+      ->hasPermission(["createPost.topic.{$this->id}"]);
+  }
 }
