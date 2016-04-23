@@ -120,20 +120,11 @@ class BoardController extends Controller
    */
   public function position(Request $request, Board $board)
   {
-    if ($request->exists('first')) {
-      $swapBoard = $board->category->firstBoard();
-    } else if ($request->exists('up')) {
-      $swapBoard = $board->prevBoard();
-    } else if ($request->exists('down')) {
-      $swapBoard = $board->nextBoard();
-    } else if ($request->exists('last')) {
-      $swapBoard = $board->category->lastBoard();
-    } else {
-      return back();
-    }
+    $swapBoard = Board::findOrFail($request->swap_id);
 
     $swapPosition = $swapBoard->position;
     $boardPosition = $board->position;
+    
     $board->update(['position' => -1]);
     $swapBoard->update(['position' => $boardPosition]);
     $board->update(['position' => $swapPosition]);

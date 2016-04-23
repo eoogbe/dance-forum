@@ -31,22 +31,42 @@ Manage Categories
             </a>
           </td>
           <td>
-            <form method="post" action="{{ route('admin.categories.position', compact('category')) }}">
-              {!! method_field('PUT') !!}
-              {!! csrf_field() !!}
+            <ul>
               @unless ($category->isFirst())
-                <button name="first" type="submit">first</button>
-                <button name="up" type="submit">up</button>
+                <li>
+                  @include('admin.categories.swap_button', [
+                    'swapCategory' => $firstCategory,
+                    'submitText' => 'first',
+                  ])
+                </li>
+                <li>
+                  @include('admin.categories.swap_button', [
+                    'swapCategory' => $category->prevCategory(),
+                    'submitText' => 'up',
+                  ])
+                </li>
               @endunless
               @unless ($category->isLast())
-                <button name="down" type="submit">down</button>
-                <button name="last" type="submit">last</button>
+                <li>
+                  @include('admin.categories.swap_button', [
+                    'swapCategory' => $category->nextCategory(),
+                    'submitText' => 'down',
+                  ])
+                </li>
+                <li>
+                  @include('admin.categories.swap_button', [
+                    'swapCategory' => $lastCategory,
+                    'submitText' => 'last',
+                  ])
+                </li>
               @endunless
-            </form>
-            <a href="{{ route('admin.categories.edit', compact('category')) }}">edit</a>
-            @include('common.delete', [
-              'deletePath' => route('admin.categories.destroy', compact('category')),
-            ])
+              <li><a href="{{ route('admin.categories.edit', compact('category')) }}">edit</a></li>
+              <li>
+                @include('common.delete', [
+                  'deletePath' => route('admin.categories.destroy', compact('category')),
+                ])
+              </li>
+            </ul>
           </td>
         </tr>
       @endforeach

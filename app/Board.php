@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Board extends Model
@@ -54,6 +55,7 @@ class Board extends Model
   {
     return $this->topics()
       ->join('posts', 'topics.id', '=', 'posts.topic_id')
+      ->orderBy(DB::raw('(CASE WHEN topics.pinned_at IS NULL THEN 1 ELSE 0 END)'))
       ->orderBy('posts.created_at', 'desc')
       ->select('topics.*')
       ->distinct();

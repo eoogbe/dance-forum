@@ -24,6 +24,13 @@
             'deletePath' => route('admin.topics.destroy', compact('topic')),
           ])
         </li>
+        <li>
+          <form method="post" action="{{ route('admin.topics.pinned', compact('topic')) }}">
+            {!! method_field('PUT') !!}
+            {!! csrf_field() !!}
+            <button type="submit">toggle pin</button>
+          </form>
+        </li>
       @endif
     </ul>
   </header>

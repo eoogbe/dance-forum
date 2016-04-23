@@ -18,7 +18,11 @@ class CategoryController extends Controller
    */
   public function index()
   {
-    return view('admin.categories.index', ['categories' => Category::orderBy('position')->get()]);
+    return view('admin.categories.index', [
+      'categories' => Category::orderBy('position')->get(),
+      'firstCategory' => Category::sortedFirst(),
+      'lastCategory' => Category::sortedLast(),
+    ]);
   }
 
   /**
@@ -107,20 +111,11 @@ class CategoryController extends Controller
    */
   public function position(Request $request, Category $category)
   {
-    if ($request->exists('first')) {
-      $swapCategory = Category::sortedFirst();
-    } else if ($request->exists('up')) {
-      $swapCategory = $category->prevCategory();
-    } else if ($request->exists('down')) {
-      $swapCategory = $category->nextCategory();
-    } else if ($request->exists('last')) {
-      $swapCategory = Category::sortedLast();
-    } else {
-      return redirect()->route('admin.categories.index');
-    }
+    $swapCategory = Category::findOrFail($request->swap_id);
 
     $swapPosition = $swapCategory->position;
     $categoryPosition = $category->position;
+
     $category->update(['position' => -1]);
     $swapCategory->update(['position' => $categoryPosition]);
     $category->update(['position' => $swapPosition]);

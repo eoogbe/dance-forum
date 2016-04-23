@@ -20,6 +20,7 @@ class TopicCrudTest extends TestCase
   public function testShowTopicView()
   {
     $user = factory(App\User::class)->create();
+
     $topic = factory(App\Topic::class)->create();
     $topic->posts()->save(factory(App\Post::class)->make());
 
@@ -94,15 +95,14 @@ class TopicCrudTest extends TestCase
   public function testNewTopicNameAndBoardDuplicate()
   {
     $user = factory(App\User::class)->create();
-    $existingTopic = factory(App\Topic::class)->create();
 
-    $topic = factory(App\Topic::class)->create(['board_id' => $existingTopic->board_id]);
+    $topic = factory(App\Topic::class)->create();
     $topic->posts()->save(factory(App\Post::class)->make());
 
     $post = factory(App\Post::class)->make();
 
     $this->actingAs($user)
-      ->visit("/boards/{$existingTopic->board->slug}/topics/create")
+      ->visit("/boards/{$topic->board->slug}/topics/create")
       ->type($topic->name, 'name')
       ->type($post->content, 'post_content')
       ->press('Create Topic')

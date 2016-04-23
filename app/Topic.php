@@ -13,7 +13,14 @@ class Topic extends Model
    *
    * @var array
    */
-  protected $fillable = ['name'];
+  protected $fillable = ['name', 'pinned_at'];
+
+  /**
+   * The attributes that should be mutated to dates.
+   *
+   * @var array
+   */
+  protected $dates = ['pinned_at'];
 
   /**
    * Get all the posts for the topic.
@@ -123,5 +130,13 @@ class Topic extends Model
       ->where('user_id', $user->id)
       ->latest('updated_at')
       ->first();
+  }
+
+  /**
+   * Check if the topic is pinned.
+   */
+  public function isPinned()
+  {
+    return !is_null($this->pinned_at);
   }
 }

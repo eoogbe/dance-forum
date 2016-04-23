@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Topic;
@@ -46,6 +47,19 @@ class TopicController extends Controller
   public function destroy(Topic $topic)
   {
     $topic->delete();
+
+    return redirect()->route('boards.show', ['board' => $topic->board]);
+  }
+
+  /**
+   * Update the pinned status of the specified resource in storage.
+   *
+   * @param  Topic  $topic
+   * @return \Illuminate\Http\Response
+   */
+  public function pinned(Topic $topic)
+  {
+    $topic->update(['pinned_at' => $topic->pinned_at ? null : Carbon::now()]);
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
   }

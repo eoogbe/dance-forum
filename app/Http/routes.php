@@ -40,6 +40,10 @@ Route::group([
     'as' => 'admin.boards.position',
     'uses' => 'BoardController@position'
   ]);
+  Route::put('topics/{topic}/pinned', [
+    'as' => 'admin.topics.pinned',
+    'uses' => 'TopicController@pinned'
+  ]);
   Route::resource('categories', 'CategoryController');
   Route::resource('boards', 'BoardController');
   Route::resource('topics', 'TopicController', ['only' => ['edit', 'update', 'destroy']]);

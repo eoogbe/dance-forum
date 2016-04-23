@@ -33,6 +33,11 @@
       <tr>
         <td>
           <p>
+            @if ($topic->isPinned())
+              pinned
+            @endif
+          </p>
+          <p>
             @if (Auth::check() && $topic->hasNewPosts(Auth::user()))
               <a href="{{ Pagination::getPostUrl($topic->firstNewPost(Auth::user())) }}">new</a>
             @endif

@@ -19,22 +19,42 @@
       <td>{{ $board->postCount() }}</td>
       <td>{{ $board->viewCount() }}</td>
       <td>
-        <form method="post" action="{{ route('admin.boards.position', compact('board')) }}">
-          {!! method_field('PUT') !!}
-          {!! csrf_field() !!}
+        <ul>
           @unless ($board->isFirst())
-            <button name="first" type="submit">first</button>
-            <button name="up" type="submit">up</button>
+            <li>
+              @include('admin.boards.swap_button', [
+                'swapBoard' => $board->category->firstBoard(),
+                'submitText' => 'first',
+              ])
+            </li>
+            <li>
+              @include('admin.boards.swap_button', [
+                'swapBoard' => $board->prevBoard(),
+                'submitText' => 'up',
+              ])
+            </li>
           @endunless
           @unless ($board->isLast())
-            <button name="down" type="submit">down</button>
-            <button name="last" type="submit">last</button>
+            <li>
+              @include('admin.boards.swap_button', [
+                'swapBoard' => $board->nextBoard(),
+                'submitText' => 'down',
+              ])
+            </li>
+            <li>
+              @include('admin.boards.swap_button', [
+                'swapBoard' => $board->category->lastBoard(),
+                'submitText' => 'last',
+              ])
+            </li>
           @endunless
-        </form>
-        <a href="{{ route('admin.boards.edit', compact('board')) }}">edit</a>
-        @include('common.delete', [
-          'deletePath' => route('admin.boards.destroy', compact('board')),
-        ])
+          <li><a href="{{ route('admin.boards.edit', compact('board')) }}">edit</a></li>
+          <li>
+            @include('common.delete', [
+              'deletePath' => route('admin.boards.destroy', compact('board')),
+            ])
+          </li>
+        </ul>
       </td>
     </tr>
     @endforeach
