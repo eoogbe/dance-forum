@@ -15,11 +15,13 @@ A example forum so I can learn [Laravel](http://laravel.com).
 - Boards
   - CRUD operations (admin)
   - order (admin)
+  - user view count
 - Topics
   - create
   - edit (admin)
   - delete (admin)
   - pagination
+  - user view count
 - Posts
   - create
   - edit (author or admin)
@@ -30,7 +32,6 @@ A example forum so I can learn [Laravel](http://laravel.com).
 ## TODO
 
 - moderators
-- views
 - pin topics
 - lock topics
 - hide topics

@@ -15,4 +15,17 @@ class BoardCrudTest extends TestCase
     $this->visit("/boards/{$board->slug}")
       ->see($board->name);
   }
+
+  public function testShowBoardView()
+  {
+    $user = factory(App\User::class)->create();
+    $board = App\Board::orderBy('position')->first();
+
+    $this->actingAs($user)
+      ->visit("/boards/{$board->slug}")
+      ->visit('/')
+      ->within('tbody tr:first-child td:last-child', function () {
+        $this->see('1');
+      });
+  }
 }

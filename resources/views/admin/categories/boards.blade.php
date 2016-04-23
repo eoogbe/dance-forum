@@ -4,6 +4,7 @@
       <th scope="col">Board</th>
       <th scope="col">Topics</th>
       <th scope="col">Posts</th>
+      <th scope="col">Views</th>
       <th scope="col">Settings</th>
     </tr>
   </thead>
@@ -16,6 +17,7 @@
       </td>
       <td>{{ $board->topicCount() }}</td>
       <td>{{ $board->postCount() }}</td>
+      <td>{{ $board->viewCount() }}</td>
       <td>
         <form method="post" action="{{ route('admin.boards.position', compact('board')) }}">
           {!! method_field('PUT') !!}

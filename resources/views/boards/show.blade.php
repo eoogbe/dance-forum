@@ -25,12 +25,18 @@
         <th scope="col">Topic</th>
         <th scope="col">Latest</th>
         <th scope="col">Posts</th>
+        <th scope="col">Views</th>
       </tr>
     </thead>
     <tbody>
       @foreach ($topics as $topic)
       <tr>
         <td>
+          <p>
+            @if (Auth::check() && $topic->hasNewPosts(Auth::user()))
+              <a href="{{ Pagination::getPostUrl($topic->firstNewPost(Auth::user())) }}">new</a>
+            @endif
+          </p>
           <p>@include('topics.link')</p>
           <p>created by <cite>{{ $topic->authorName() }}</cite></p>
         </td>
@@ -43,6 +49,7 @@
           @endif
         </td>
         <td>{{ $topic->postCount() }}</td>
+        <td>{{ $topic->viewCount() }}</td>
       </tr>
       @endforeach
     </tbody>

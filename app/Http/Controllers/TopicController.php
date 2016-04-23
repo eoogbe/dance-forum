@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Illuminate\Http\Request;
 
 use App\Board;
@@ -28,6 +29,10 @@ class TopicController extends Controller
   */
   public function show(Topic $topic)
   {
+    if (Auth::check()) {
+      $topic->views()->firstOrCreate(['user_id' => Auth::id()])->increment('count');
+    }
+
     $posts = $topic->paginatedPosts();
 
     return view('topics.show', compact('topic', 'posts'));

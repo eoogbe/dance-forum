@@ -17,6 +17,20 @@ class TopicCrudTest extends TestCase
       ->see($topic->name);
   }
 
+  public function testShowTopicView()
+  {
+    $user = factory(App\User::class)->create();
+    $topic = factory(App\Topic::class)->create();
+    $topic->posts()->save(factory(App\Post::class)->make());
+
+    $this->actingAs($user)
+      ->visit("/topics/{$topic->slug}")
+      ->visit("/boards/{$topic->board->slug}")
+      ->within('tbody tr:first-child td:last-child', function () {
+        $this->see('1');
+      });
+  }
+
   public function testNewTopic()
   {
     $user = factory(App\User::class)->create();

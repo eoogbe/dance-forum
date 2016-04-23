@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Board extends Model
 {
-  use Sluggable;
+  use Sluggable, Viewable;
 
   /**
    * The attributes that are mass assignable.
@@ -21,6 +21,14 @@ class Board extends Model
   public function topics()
   {
     return $this->hasMany(Topic::class);
+  }
+
+  /**
+   * Get all the views for the board.
+   */
+  public function views()
+  {
+    return $this->hasMany(BoardView::class);
   }
 
   /**

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Topic extends Model
 {
-  use Sluggable;
+  use Sluggable, Viewable;
 
   /**
    * The attributes that are mass assignable.
@@ -24,11 +24,11 @@ class Topic extends Model
   }
 
   /**
-   * Get the latest post written for the topic.
+   * Get all the views for the topic.
    */
-  public function lastPost()
+  public function views()
   {
-    return $this->hasMany(Post::class)->latest()->first();
+    return $this->hasMany(TopicView::class);
   }
 
   /**
@@ -72,10 +72,56 @@ class Topic extends Model
   }
 
   /**
+  * Get the latest post written for the topic.
+  */
+  public function lastPost()
+  {
+    return $this->posts()->latest()->first();
+  }
+
+  /**
    * Get the name of the user who created the topic.
    */
   public function authorName()
   {
     return $this->firstPost()->authorName();
+  }
+
+  /**
+   * Checks if the topic has any posts created after the given user last viewed the topic.
+   */
+  public function hasNewPosts($user)
+  {
+    return $this->newPosts($user)->exists();
+  }
+
+  /**
+   * Get the first post for the topic that was created after the given user last viewed the topic.
+   */
+  public function firstNewPost($user)
+  {
+    return $this->newPosts($user)->first();
+  }
+
+  /**
+   * Get all the posts for the topic that were created after the latest view by the given user.
+   */
+  private function newPosts($user)
+  {
+    $lastView = $this->lastViewBy($user);
+    $posts = $this->posts();
+
+    return $lastView ? $posts->where('created_at', '>', $lastView->updated_at) : $posts;
+  }
+
+  /**
+   * Get the latest view by the given user for the topic.
+   */
+  private function lastViewBy($user)
+  {
+    return $this->views()
+      ->where('user_id', $user->id)
+      ->latest('updated_at')
+      ->first();
   }
 }

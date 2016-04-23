@@ -5,6 +5,7 @@
       <th scope="col">Latest</th>
       <th scope="col">Topics</th>
       <th scope="col">Posts</th>
+      <th scope="col">Views</th>
     </tr>
   </thead>
   <tbody>
@@ -25,6 +26,7 @@
       </td>
       <td>{{ $board->topicCount() }}</td>
       <td>{{ $board->postCount() }}</td>
+      <td>{{ $board->viewCount() }}</td>
     </tr>
     @endforeach
   </tbody>

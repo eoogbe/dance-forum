@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -20,6 +21,10 @@ class BoardController extends Controller
    */
   public function show(Request $request, Board $board)
   {
+    if (Auth::check()) {
+      $board->views()->firstOrCreate(['user_id' => Auth::id()])->increment('count');
+    }
+
     $perPage = 15;
     $page = Paginator::resolveCurrentPage();
     $items = $board->sortedTopics()->skip(($page - 1) * $perPage)->take($perPage)->get();

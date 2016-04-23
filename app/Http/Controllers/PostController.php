@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Pagination;
 use Illuminate\Http\Request;
 
 use App\Topic;
@@ -53,11 +54,7 @@ class PostController extends Controller
       'parent_id' => $request->parent_id,
     ]);
 
-    $posts = $topic->paginatedPosts();
-    $posts->setPath(route('topics.show', compact('topic')));
-    $posts->fragment("post-{$post->id}");
-
-    return redirect($posts->url($posts->lastPage()));
+    return redirect(Pagination::getPostUrl($post));
   }
 
   /**
@@ -88,12 +85,7 @@ class PostController extends Controller
       'content' => $request->content,
     ]);
 
-    $posts = $post->topic->paginatedPosts();
-    $posts->setPath(route('topics.show', ['topic' => $post->topic]));
-    $posts->fragment("post-{$post->id}");
-    $page = ceil($post->offset() / $posts->perPage());
-
-    return redirect($posts->url($page));
+    return redirect(Pagination::getPostUrl($post));
   }
 
   /**
@@ -123,11 +115,6 @@ class PostController extends Controller
     $this->authorize($post);
     $post->restore();
 
-    $posts = $post->topic->paginatedPosts();
-    $posts->setPath(route('topics.show', ['topic' => $post->topic]));
-    $posts->fragment("post-{$post->id}");
-    $page = ceil($post->offset() / $posts->perPage());
-
-    return redirect($posts->url($page));
+    return redirect(Pagination::getPostUrl($post));
   }
 }
