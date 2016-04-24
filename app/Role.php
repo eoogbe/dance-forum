@@ -34,18 +34,44 @@ class Role extends Model
    */
   public function hasPermission($names)
   {
-    return $this->permissions()->whereIn('name', $names)->exists();
+    return $this->permissions()->whereIn('name', (array) $names)->exists();
   }
 
   /**
    * Creates permissions with the given names for the role.
    */
-  public function createPermissions($names)
+  public function createPermission($names)
   {
     $records = array_map(function($name) {
       return compact('name');
-    }, $names);
+    }, (array) $names);
 
     $this->permissions()->createMany($records);
+  }
+
+  /**
+   * Attaches existing permissions with the given names to the role.
+   */
+  public function attachPermission($names)
+  {
+    if (!is_array($names)) {
+      $names = [$names];
+    }
+
+    $permissionIds = Permission::whereIn('name', $names)->pluck('id')->toArray();
+    $this->permissions()->attach($permissionIds);
+  }
+
+  /**
+   * Detaches permissions with the given names from the role.
+   */
+  public function detachPermission($names)
+  {
+    if (!is_array($names)) {
+      $names = [$names];
+    }
+
+    $permissionIds = $this->permissions()->whereIn('name', $names)->getRelatedIds()->toArray();
+    $this->permissions()->detach($permissionIds);
   }
 }

@@ -18,10 +18,12 @@ class AdminTopicCrudTest extends TestCase
 
     $this->actingAs($user)
       ->visit("/topics/{$topic->slug}")
-      ->dontSeeLink('edit')
-      ->dontSee('delete')
-      ->dontSee('lock')
-      ->dontSee('pin');
+      ->within('header', function () {
+        $this->dontSeeLink('edit')
+          ->dontSee('delete')
+          ->dontSee('lock')
+          ->dontSee('pin');
+      });
   }
 
   public function testEditTopic()
@@ -77,13 +79,13 @@ class AdminTopicCrudTest extends TestCase
 
     $this->actingAs($user)
       ->visit("/boards/{$topic->board->slug}")
-      ->within('tbody tr:first-child', function () use ($topic2) {
-        $this->see($topic2->name);
+      ->within('section > ul > li:last-child', function () use ($topic) {
+        $this->see($topic->name);
       })
       ->visit("/topics/{$topic->slug}")
       ->press('pin')
       ->visit("/boards/{$topic->board->slug}")
-      ->within('tbody tr:first-child', function () use ($topic) {
+      ->within('section > ul > li:first-child', function () use ($topic) {
         $this->see($topic->name);
       });
   }
@@ -102,7 +104,7 @@ class AdminTopicCrudTest extends TestCase
       ->visit("/topics/{$topic->slug}")
       ->press('unpin')
       ->visit("/boards/{$topic->board->slug}")
-      ->within('tbody tr:last-child', function () use ($topic) {
+      ->within('section > ul > li:last-child', function () use ($topic) {
         $this->see($topic->name);
       });
   }
@@ -113,7 +115,7 @@ class AdminTopicCrudTest extends TestCase
     $user = factory(App\User::class)->create();
 
     $topic = factory(App\Topic::class)->create();
-    $topic->posts()->save(factory(App\Post::class)->make());
+    $post = $topic->posts()->save(factory(App\Post::class)->make());
 
     $this->actingAs($admin)
       ->visit("/topics/{$topic->slug}")
@@ -122,7 +124,11 @@ class AdminTopicCrudTest extends TestCase
       ->see('reply')
       ->actingAs($user)
       ->visit("/topics/{$topic->slug}")
-      ->dontSee('reply');
+      ->dontSee('reply')
+      ->actingAs($post->author)
+      ->visit("/topics/{$topic->slug}")
+      ->dontSeeLink('edit')
+      ->dontSee('delete');
   }
 
   public function testUnlockTopic()
@@ -131,16 +137,20 @@ class AdminTopicCrudTest extends TestCase
     $user = factory(App\User::class)->create();
 
     $topic = factory(App\Topic::class)->create();
-    $topic->posts()->save(factory(App\Post::class)->make());
+    $post = $topic->posts()->save(factory(App\Post::class)->make());
 
-    $permission = App\Permission::where('name', "createPost.topic.{$topic->id}")->first();
-    App\Role::where('name', 'member')->first()->permissions()->detach($permission);
+    App\Role::where('name', 'member')->first()->detachPermission("createPost.topic.{$topic->id}");
+    $post->author->detachPermission(["update.post.{$post->id}", "destroy.post.{$post->id}"]);
 
     $this->actingAs($admin)
       ->visit("/topics/{$topic->slug}")
       ->press('unlock')
       ->actingAs($user)
       ->visit("/topics/{$topic->slug}")
-      ->see('reply');
+      ->see('reply')
+      ->actingAs($post->author)
+      ->visit("/topics/{$topic->slug}")
+      ->seeLink('edit')
+      ->see('delete');
   }
 }

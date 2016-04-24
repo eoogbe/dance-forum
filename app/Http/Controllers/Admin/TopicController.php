@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 use App\Topic;
 use App\Role;
-use App\Permission;
 use App\Http\Requests\UpdateTopicRequest;
 use App\Http\Controllers\Controller;
 
@@ -87,8 +86,11 @@ class TopicController extends Controller
    */
   public function lock(Topic $topic)
   {
-    $permission = Permission::where('name', "createPost.topic.{$topic->id}")->first();
-    Role::where('name', 'member')->first()->permissions()->detach($permission);
+    Role::where('name', 'member')->first()->detachPermission("createPost.topic.{$topic->id}");
+
+    foreach ($topic->posts as $post) {
+      $post->author->detachPermission(["update.post.{$post->id}", "destroy.post.{$post->id}"]);
+    }
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
   }
@@ -101,8 +103,11 @@ class TopicController extends Controller
    */
   public function unlock(Topic $topic)
   {
-    $permission = Permission::where('name', "createPost.topic.{$topic->id}")->first();
-    Role::where('name', 'member')->first()->permissions()->attach($permission);
+    Role::where('name', 'member')->first()->attachPermission("createPost.topic.{$topic->id}");
+
+    foreach ($topic->posts as $post) {
+      $post->author->attachPermission(["update.post.{$post->id}", "destroy.post.{$post->id}"]);
+    }
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
   }

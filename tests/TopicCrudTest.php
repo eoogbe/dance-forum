@@ -27,8 +27,8 @@ class TopicCrudTest extends TestCase
     $this->actingAs($user)
       ->visit("/topics/{$topic->slug}")
       ->visit("/boards/{$topic->board->slug}")
-      ->within('tbody tr:first-child td:last-child', function () {
-        $this->see('1');
+      ->within('section > ul > li:first-child', function () {
+        $this->see('1 view');
       });
   }
 

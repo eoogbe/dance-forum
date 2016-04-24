@@ -56,7 +56,16 @@ Route::group([
     'as' => 'admin.topics.unlock',
     'uses' => 'TopicController@unlock'
   ]);
+  Route::get('users/{user}/roles/edit', [
+    'as' => 'admin.users.editRoles',
+    'uses' => 'UserController@editRoles'
+  ]);
+  Route::put('users/{user}/roles', [
+    'as' => 'admin.users.updateRoles',
+    'uses' => 'UserController@updateRoles'
+  ]);
   Route::resource('categories', 'CategoryController');
   Route::resource('boards', 'BoardController');
   Route::resource('topics', 'TopicController', ['only' => ['edit', 'update', 'destroy']]);
+  Route::resource('users', 'UserController', ['only' => ['index', 'show']]);
 });

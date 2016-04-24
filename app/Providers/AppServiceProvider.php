@@ -24,19 +24,15 @@ class AppServiceProvider extends ServiceProvider
     });
 
     User::created(function ($user) {
-      $user->roles()->create([
-        'name' => "user.{$user->id}"
-      ]);
-      
       $user->roles()->attach(Role::where('name', 'member')->first());
     });
 
     Topic::created(function ($topic) {
-      Role::where('name', 'member')->first()->createPermissions(["createPost.topic.{$topic->id}"]);
+      Role::where('name', 'member')->first()->createPermission("createPost.topic.{$topic->id}");
     });
 
     Post::created(function ($post) {
-      $post->author->createPermissions([
+      $post->author->createPermission([
         "update.post.{$post->id}",
         "destroy.post.{$post->id}",
       ]);

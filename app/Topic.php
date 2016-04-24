@@ -147,6 +147,6 @@ class Topic extends Model
   {
     return !Role::where('name', 'member')
       ->first()
-      ->hasPermission(["createPost.topic.{$this->id}"]);
+      ->hasPermission("createPost.topic.{$this->id}");
   }
 }

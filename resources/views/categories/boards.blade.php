@@ -1,33 +1,19 @@
-<table>
-  <thead>
-    <tr>
-      <th scope="col">Board</th>
-      <th scope="col">Latest</th>
-      <th scope="col">Topics</th>
-      <th scope="col">Posts</th>
-      <th scope="col">Views</th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach ($category->sortedBoards as $board)
-    <tr>
-      <td>
-        <p>@include('boards.link')</p>
-        <div>{!! Purifier::clean($board->description) !!}</div>
-      </td>
-      <td>
-        @if ($board->lastPost())
+<ul>
+  @foreach ($category->sortedBoards as $board)
+    <li>
+      <p>@include('boards.link')</p>
+      <div>{!! Purifier::clean($board->description) !!}</div>
+      @if ($board->lastPost())
+        <p>
+          Last post
           @include('posts.link', ['post' => $board->lastPost()])
           by <cite>{{ $board->lastPost()->authorName() }}</cite>
           in @include('topics.link', ['topic' => $board->lastPost()->topic])
-        @else
-          None
-        @endif
-      </td>
-      <td>{{ $board->topicCount() }}</td>
-      <td>{{ $board->postCount() }}</td>
-      <td>{{ $board->viewCount() }}</td>
-    </tr>
-    @endforeach
-  </tbody>
-</table>
+        </p>
+      @endif
+      <p>{{ $board->topicCount() }} {{ str_plural('topic', $board->topicCount()) }}</p>
+      <p>{{ $board->postCount() }} {{ str_plural('post', $board->postCount()) }}</p>
+      <p>{{ $board->viewCount() }} {{ str_plural('view', $board->viewCount()) }}</p>
+    </li>
+  @endforeach
+</ul>

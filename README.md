@@ -6,9 +6,10 @@ A example forum so I can learn [Laravel](http://laravel.com).
 
 ## Features
 
-- User roles
 - Admin panel
 - WYSIWYG for formatted text
+- User roles
+  - assign (admin)
 - Categories
   - CRUD operations (admin)
   - order (admin)
@@ -34,13 +35,13 @@ A example forum so I can learn [Laravel](http://laravel.com).
 ## TODO
 
 - moderators
-- create admins
 - hide topics
 - undo/redo delete
 - user profiles
 - subscriptions
 - remove account
 - approval
+- private messages
 - report spam
 - ban users
 - search

@@ -11,18 +11,14 @@ Manage {{ $board->name }}
 @section('content')
 <section>
   <h2>Manage {{ $board->name }}</h2>
-
-  <dl>
-    <dt>Category</dt>
-    <dd>
-      <a href="{{ route('admin.categories.show', ['category' => $board->category]) }}">
-        {{ $board->category->name }}
-      </a>
-    </dd>
-  </dl>
-
   <div>{!! Purifier::clean($board->description) !!}</div>
 
+  <p>
+    In
+    <a href="{{ route('admin.categories.show', ['category' => $board->category]) }}">
+      {{ $board->category->name }}
+    </a>
+  </p>
 
   <ul>
     <li><a href="{{ route('boards.show', compact('board')) }}">view on forum</a></li>

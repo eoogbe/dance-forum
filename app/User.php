@@ -12,7 +12,7 @@ class User extends Authenticatable
    * @var array
    */
   protected $fillable = [
-    'name', 'email', 'password',
+    'name', 'email', 'password', 'login_at',
   ];
 
   /**
@@ -23,6 +23,23 @@ class User extends Authenticatable
   protected $hidden = [
     'password', 'remember_token',
   ];
+
+  /**
+   * The attributes that should be mutated to dates.
+   *
+   * @var array
+   */
+  protected $dates = ['login_at'];
+
+  /**
+   * Get the route key for the model.
+   *
+   * @return string
+   */
+  public function getRouteKeyName()
+  {
+    return 'name';
+  }
 
   /**
    * Get all the posts the user wrote.
@@ -41,6 +58,22 @@ class User extends Authenticatable
   }
 
   /**
+  * Get all the permissions for the user.
+  */
+  public function permissions()
+  {
+    return $this->belongsToMany(Permission::class)->withPivot('has_access');
+  }
+
+  /**
+   * Get the number of posts for the user.
+   */
+  public function postCount()
+  {
+    return $this->posts()->count();
+  }
+
+  /**
    * Checks if the user has a role with the given name.
    */
   public function hasRole($name)
@@ -54,6 +87,12 @@ class User extends Authenticatable
   public function hasPermission($name)
   {
     $names = $this->parsePermissionNames($name);
+
+    $userPermission = $this->permissions()->whereIn('name', $names)->first();
+
+    if ($userPermission) {
+      return $userPermission->pivot->has_access;
+    }
 
     foreach ($this->roles as $role) {
       if ($role->hasPermission($names)) {
@@ -69,7 +108,7 @@ class User extends Authenticatable
    */
   private function parsePermissionNames($name)
   {
-    $names = ['*', $name];
+    $names = [$name];
 
     for ($i = strpos($name, '.'); $i !== false; $i = strpos($name, '.', $i + 1)) {
       $names[] = substr($name, 0, $i);
@@ -79,18 +118,43 @@ class User extends Authenticatable
   }
 
   /**
-   * Creates permissions with the given names for the shadow role of the user.
+   * Creates permissions with the given names for the user.
    */
-  public function createPermissions($names)
+  public function createPermission($names)
   {
-    return $this->shadowRole()->createPermissions($names);
+    if (!is_array($names)) {
+      $names = [$names];
+    }
+
+    foreach ($names as $name) {
+      $permission = Permission::create(compact('name'));
+      $this->permissions()->attach($permission, ['has_access' => true]);
+    }
   }
 
   /**
-   * Gets the role unique to the user.
+   * Attaches existing permissions with the given names to the user.
    */
-  private function shadowRole()
+  public function attachPermission($names)
   {
-    return $this->roles()->where('name', "user.{$this->id}")->first();
+    if (!is_array($names)) {
+      $names = [$names];
+    }
+
+    $permissionIds = Permission::whereIn('name', $names)->pluck('id')->toArray();
+    $this->permissions()->attach(array_fill_keys($permissionIds, ['has_access' => true]));
+  }
+
+  /**
+   * Detaches permissions with the given names from the user.
+   */
+  public function detachPermission($names)
+  {
+    if (!is_array($names)) {
+      $names = [$names];
+    }
+
+    $permissionIds = $this->permissions()->whereIn('name', $names)->getRelatedIds()->toArray();
+    $this->permissions()->detach($permissionIds);
   }
 }

@@ -14,7 +14,7 @@ class RolesTableSeeder extends Seeder
   public function run()
   {
     $admin = Role::create(['name' => 'admin']);
-    $admin->createPermissions(['*']);
+    $admin->createPermission(['update', 'destroy', 'restore', 'createPost']);
 
     Role::create(['name' => 'member']);
   }

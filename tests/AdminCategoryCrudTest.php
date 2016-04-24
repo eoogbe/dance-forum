@@ -147,10 +147,10 @@ class AdminCategoryCrudTest extends TestCase
 
     $this->actingAs($user)
       ->visit('/admin/categories')
-      ->within('tbody tr:last-child', function() {
+      ->within('section > ul > li:last-child', function() {
         $this->press('first');
       })
-      ->within('tbody tr:first-child', function() use ($category) {
+      ->within('section > ul > li:first-child', function() use ($category) {
         $this->see($category->name);
       });
   }
@@ -165,10 +165,10 @@ class AdminCategoryCrudTest extends TestCase
 
     $this->actingAs($user)
       ->visit('/admin/categories')
-      ->within('tbody tr:last-child', function() {
+      ->within('section > ul > li:last-child', function() {
         $this->press('up');
       })
-      ->within('tbody tr:nth-last-child(2)', function() use ($category) {
+      ->within('section > ul > li:nth-last-child(2)', function() use ($category) {
         $this->see($category->name);
       });
   }
@@ -183,10 +183,10 @@ class AdminCategoryCrudTest extends TestCase
 
     $this->actingAs($user)
       ->visit('/admin/categories')
-      ->within('tbody tr:first-child', function() {
+      ->within('section > ul > li:first-child', function() {
         $this->press('down');
       })
-      ->within('tbody tr:nth-child(2)', function() use ($category) {
+      ->within('section > ul > li:nth-child(2)', function() use ($category) {
         $this->see($category->name);
       });
   }
@@ -201,10 +201,10 @@ class AdminCategoryCrudTest extends TestCase
 
     $this->actingAs($user)
       ->visit('/admin/categories')
-      ->within('tbody tr:first-child', function() {
+      ->within('section > ul > li:first-child', function() {
         $this->press('last');
       })
-      ->within('tbody tr:last-child', function() use ($category) {
+      ->within('section > ul > li:last-child', function() use ($category) {
         $this->see($category->name);
       });
   }
