@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Gate;
 use App\Http\Requests\Request;
 
 class UpdateCategoryRequest extends Request
@@ -13,7 +14,7 @@ class UpdateCategoryRequest extends Request
    */
   public function authorize()
   {
-    return $this->user()->hasRole('admin');
+    return Gate::allows('update', $this->route('category'));
   }
 
   /**
@@ -24,7 +25,7 @@ class UpdateCategoryRequest extends Request
   public function rules()
   {
     $categoryId = $this->route('category')->id;
-    
+
     return [
       'name' => 'required|max:255|unique:categories,name,'.$categoryId.',id',
     ];

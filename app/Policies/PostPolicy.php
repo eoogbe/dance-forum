@@ -20,7 +20,7 @@ class PostPolicy
    */
   public function update(User $user, Post $post)
   {
-    return $user->hasPermission("update.post.{$post->id}");
+    return !$post->topic->isLocked() && $user->hasPermission("update.post.{$post->id}");
   }
 
   /**
@@ -32,7 +32,7 @@ class PostPolicy
    */
   public function destroy(User $user, Post $post)
   {
-    return $user->hasPermission("destroy.post.{$post->id}");
+    return !$post->topic->isLocked() && $user->hasPermission("delete.post.{$post->id}");
   }
 
   /**

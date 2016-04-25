@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Gate;
 use App\Http\Requests\Request;
 
 class UpdateBoardRequest extends Request
@@ -13,7 +14,7 @@ class UpdateBoardRequest extends Request
    */
   public function authorize()
   {
-    return $this->user()->hasRole('admin');
+    return Gate::allows('update', $this->route('board'));
   }
 
   /**

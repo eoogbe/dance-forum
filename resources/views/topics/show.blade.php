@@ -14,18 +14,22 @@
 
     <ul>
       <li>
-        @can('createPost', $topic)
+        @can('addPost', $topic)
           <a href="{{ route('topics.posts.create', compact('topic')) }}">reply</a>
         @endcan
       </li>
 
-      @role('admin')
+      @can('update', $topic)
         <li><a href="{{ route('admin.topics.edit', compact('topic')) }}">edit</a></li>
+      @endcan
+      @can('destroy', $topic)
         <li>
           @include('common.delete', [
             'deletePath' => route('admin.topics.destroy', compact('topic')),
           ])
         </li>
+      @endcan
+      @can('lock', $topic)
         <li>
           @if ($topic->isLocked())
             <form method="post" action="{{ route('admin.topics.unlock', compact('topic')) }}">
@@ -39,6 +43,8 @@
             </form>
           @endif
         </li>
+      @endcan
+      @can('pin', $topic)
         <li>
           @if ($topic->isPinned())
             <form method="post" action="{{ route('admin.topics.unpin', compact('topic')) }}">
@@ -52,7 +58,7 @@
             </form>
           @endif
         </li>
-      @endif
+      @endcan
     </ul>
   </header>
 
@@ -88,7 +94,7 @@
                   </li>
                 @endcan
               @else
-                @can('createPost', $topic)
+                @can('addPost', $topic)
                   <li>
                     <a href="{{ route('topics.posts.create', ['topic' => $topic, 'parent_id' => $post->id]) }}">
                       reply

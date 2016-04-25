@@ -74,7 +74,7 @@ class PostCrudTest extends TestCase
 
   public function testEditPostWithAdmin()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $topic = factory(App\Topic::class)->create();
     $post = factory(App\Post::class)->make();
@@ -112,7 +112,7 @@ class PostCrudTest extends TestCase
 
   public function testDeletePostWithAdmin()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $topic = factory(App\Topic::class)->create();
     $post = factory(App\Post::class)->make();
@@ -139,7 +139,7 @@ class PostCrudTest extends TestCase
 
   public function testRestorePost()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $topic = factory(App\Topic::class)->create();
     $post = factory(App\Post::class)->make();

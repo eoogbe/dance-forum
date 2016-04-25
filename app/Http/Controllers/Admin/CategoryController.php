@@ -12,12 +12,24 @@ use App\Http\Controllers\Controller;
 class CategoryController extends Controller
 {
   /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
+
+  /**
    * Display a listing of the resource.
    *
    * @return \Illuminate\Http\Response
    */
   public function index()
   {
+    $this->authorize('index', Category::class);
+
     return view('admin.categories.index', [
       'categories' => Category::orderBy('position')->get(),
       'firstCategory' => Category::sortedFirst(),
@@ -33,6 +45,8 @@ class CategoryController extends Controller
    */
   public function show(Category $category)
   {
+    $this->authorize($category);
+
     return view('admin.categories.show', compact('category'));
   }
 
@@ -43,6 +57,8 @@ class CategoryController extends Controller
    */
   public function create()
   {
+    $this->authorize('store', Category::class);
+
     return view('admin.categories.create', ['category' => new Category()]);
   }
 
@@ -70,6 +86,8 @@ class CategoryController extends Controller
    */
   public function edit(Category $category)
   {
+    $this->authorize('update', $category);
+
     return view('admin.categories.edit', compact('category'));
   }
 
@@ -97,6 +115,8 @@ class CategoryController extends Controller
    */
   public function destroy(Category $category)
   {
+    $this->authorize($category);
+
     $category->delete();
 
     return redirect()->route('admin.categories.index');
@@ -111,6 +131,8 @@ class CategoryController extends Controller
    */
   public function position(Request $request, Category $category)
   {
+    $this->authorize('update', $category);
+
     $swapCategory = Category::findOrFail($request->swap_id);
 
     $swapPosition = $swapCategory->position;

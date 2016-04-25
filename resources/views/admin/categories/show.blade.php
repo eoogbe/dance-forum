@@ -15,10 +15,14 @@ Manage {{ $category->name }}
 
     <ul>
       <li><a href="{{ route('categories.show', compact('category')) }}">view on forum</a></li>
-      <li><a href="{{ route('admin.categories.edit', compact('category')) }}">edit</a></li>
-      <li>
-        @include('common.delete', ['deletePath' => route('admin.categories.destroy', compact('category'))])
-      </li>
+      @can('update', $category)
+        <li><a href="{{ route('admin.categories.edit', compact('category')) }}">edit</a></li>
+      @endcan
+      @can('destroy', $category)
+        <li>
+          @include('common.delete', ['deletePath' => route('admin.categories.destroy', compact('category'))])
+        </li>
+      @endcan
     </ul>
   </header>
 

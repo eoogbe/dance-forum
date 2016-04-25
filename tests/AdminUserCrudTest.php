@@ -10,7 +10,7 @@ class AdminUserCrudTest extends TestCase
 
   public function testIndexUser()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $this->actingAs($user)
       ->visit('/admin/users')
@@ -28,7 +28,7 @@ class AdminUserCrudTest extends TestCase
 
   public function testShowUser()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $this->actingAs($user)
       ->visit("/admin/users/{$user->name}")
@@ -46,7 +46,7 @@ class AdminUserCrudTest extends TestCase
 
   public function testEditUserRoles()
   {
-    $role = App\Role::where('name', 'admin')->first();
+    $role = App\Role::where('name', 'Admin')->first();
     $admin = $role->users()->first();
     $user = factory(App\User::class)->create();
 

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+  use Sluggable;
+
   /**
    * The attributes that are mass assignable.
    *
@@ -60,18 +62,5 @@ class Role extends Model
 
     $permissionIds = Permission::whereIn('name', $names)->pluck('id')->toArray();
     $this->permissions()->attach($permissionIds);
-  }
-
-  /**
-   * Detaches permissions with the given names from the role.
-   */
-  public function detachPermission($names)
-  {
-    if (!is_array($names)) {
-      $names = [$names];
-    }
-
-    $permissionIds = $this->permissions()->whereIn('name', $names)->getRelatedIds()->toArray();
-    $this->permissions()->detach($permissionIds);
   }
 }

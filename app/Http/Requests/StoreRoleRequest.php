@@ -3,10 +3,10 @@
 namespace App\Http\Requests;
 
 use Gate;
-use App\Category;
+use App\Role;
 use App\Http\Requests\Request;
 
-class StoreCategoryRequest extends Request
+class StoreRoleRequest extends Request
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -15,7 +15,7 @@ class StoreCategoryRequest extends Request
    */
   public function authorize()
   {
-    return Gate::allows('store', Category::class);
+    return Gate::allows('store', Role::class);
   }
 
   /**
@@ -26,7 +26,7 @@ class StoreCategoryRequest extends Request
   public function rules()
   {
     return [
-      'name' => 'required|max:255|unique:categories',
+      'name' => 'required|max:255|unique:roles',
     ];
   }
 }

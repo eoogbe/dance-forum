@@ -20,6 +20,6 @@ class UsersTableSeeder extends Seeder
       'password' => bcrypt(env('ADMIN_PASSWORD')),
     ]);
 
-    $user->roles()->attach(Role::where('name', 'admin')->first());
+    $user->roles()->attach(Role::where('name', 'Admin')->first());
   }
 }

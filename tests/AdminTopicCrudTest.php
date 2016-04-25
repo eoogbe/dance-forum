@@ -28,7 +28,7 @@ class AdminTopicCrudTest extends TestCase
 
   public function testEditTopic()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $topic = factory(App\Topic::class)->create();
     $topic->posts()->save(factory(App\Post::class)->make());
@@ -56,7 +56,7 @@ class AdminTopicCrudTest extends TestCase
 
   public function testDeleteTopic()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $topic = factory(App\Topic::class)->create();
     $topic->posts()->save(factory(App\Post::class)->make());
@@ -69,7 +69,7 @@ class AdminTopicCrudTest extends TestCase
 
   public function testPinTopic()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $topic = factory(App\Topic::class)->create();
     $topic->posts()->save(factory(App\Post::class)->make(['created_at' => Carbon::now()->subDay()]));
@@ -92,7 +92,7 @@ class AdminTopicCrudTest extends TestCase
 
   public function testUnpinTopic()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $topic = factory(App\Topic::class)->create(['pinned_at' => Carbon::now()]);
     $topic->posts()->save(factory(App\Post::class)->make(['created_at' => Carbon::now()->subDay()]));
@@ -111,18 +111,14 @@ class AdminTopicCrudTest extends TestCase
 
   public function testLockTopic()
   {
-    $admin = App\Role::where('name', 'admin')->first()->users()->first();
-    $user = factory(App\User::class)->create();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $topic = factory(App\Topic::class)->create();
     $post = $topic->posts()->save(factory(App\Post::class)->make());
 
-    $this->actingAs($admin)
+    $this->actingAs($user)
       ->visit("/topics/{$topic->slug}")
       ->press('lock')
-      ->visit("/topics/{$topic->slug}")
-      ->see('reply')
-      ->actingAs($user)
       ->visit("/topics/{$topic->slug}")
       ->dontSee('reply')
       ->actingAs($post->author)
@@ -133,19 +129,14 @@ class AdminTopicCrudTest extends TestCase
 
   public function testUnlockTopic()
   {
-    $admin = App\Role::where('name', 'admin')->first()->users()->first();
-    $user = factory(App\User::class)->create();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
-    $topic = factory(App\Topic::class)->create();
+    $topic = factory(App\Topic::class)->create(['locked_at' => Carbon::now()]);
     $post = $topic->posts()->save(factory(App\Post::class)->make());
 
-    App\Role::where('name', 'member')->first()->detachPermission("createPost.topic.{$topic->id}");
-    $post->author->detachPermission(["update.post.{$post->id}", "destroy.post.{$post->id}"]);
-
-    $this->actingAs($admin)
+    $this->actingAs($user)
       ->visit("/topics/{$topic->slug}")
       ->press('unlock')
-      ->actingAs($user)
       ->visit("/topics/{$topic->slug}")
       ->see('reply')
       ->actingAs($post->author)

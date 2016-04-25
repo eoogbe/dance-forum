@@ -13,6 +13,16 @@ use App\Http\Controllers\Controller;
 class TopicController extends Controller
 {
   /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
+
+  /**
    * Show the form for editing the specified resource.
    *
    * @param  Topic  $topic
@@ -20,6 +30,8 @@ class TopicController extends Controller
    */
   public function edit(Topic $topic)
   {
+    $this->authorize('update', $topic);
+
     return view('admin.topics.edit', compact('topic'));
   }
 
@@ -47,6 +59,8 @@ class TopicController extends Controller
    */
   public function destroy(Topic $topic)
   {
+    $this->authorize($topic);
+
     $topic->delete();
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
@@ -60,6 +74,8 @@ class TopicController extends Controller
    */
   public function pin(Topic $topic)
   {
+    $this->authorize($topic);
+
     $topic->update(['pinned_at' => Carbon::now()]);
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
@@ -73,6 +89,8 @@ class TopicController extends Controller
    */
   public function unpin(Topic $topic)
   {
+    $this->authorize('pin', $topic);
+
     $topic->update(['pinned_at' => null]);
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
@@ -86,11 +104,9 @@ class TopicController extends Controller
    */
   public function lock(Topic $topic)
   {
-    Role::where('name', 'member')->first()->detachPermission("createPost.topic.{$topic->id}");
+    $this->authorize($topic);
 
-    foreach ($topic->posts as $post) {
-      $post->author->detachPermission(["update.post.{$post->id}", "destroy.post.{$post->id}"]);
-    }
+    $topic->update(['locked_at' => Carbon::now()]);
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
   }
@@ -103,11 +119,9 @@ class TopicController extends Controller
    */
   public function unlock(Topic $topic)
   {
-    Role::where('name', 'member')->first()->attachPermission("createPost.topic.{$topic->id}");
+    $this->authorize('lock', $topic);
 
-    foreach ($topic->posts as $post) {
-      $post->author->attachPermission(["update.post.{$post->id}", "destroy.post.{$post->id}"]);
-    }
+    $topic->update(['locked_at' => null]);
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
   }

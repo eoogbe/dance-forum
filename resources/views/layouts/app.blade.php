@@ -20,11 +20,11 @@
   <header>
     <h1><a href="{{ url('/') }}">Dance Forum</a></h1>
 
-    @role('admin')
+    @can('index', App\Board::class)
       <ul>
         <li><a href="{{ url('/admin') }}">Admin</a></li>
       </ul>
-    @endif
+    @endcan
 
     <ul>
       @if (Auth::guest())

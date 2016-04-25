@@ -12,7 +12,9 @@ Manage Boards
 <section>
   <header>
     <h2>Manage Boards</h2>
-    <p><a href="{{ route('admin.boards.create') }}">New Board</a></p>
+    @can('store', App\Board::class)
+      <p><a href="{{ route('admin.boards.create') }}">New Board</a></p>
+    @endcan
   </header>
 
   @foreach ($categories as $category)

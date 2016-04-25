@@ -27,7 +27,6 @@ Route::resource('topics.posts', 'PostController', ['only' => ['create', 'store']
 Route::resource('posts', 'PostController', ['only' => ['edit', 'update', 'destroy']]);
 
 Route::group([
-  'middleware' => ['auth', 'role:admin'],
   'namespace' => 'Admin',
   'prefix' => 'admin',
 ], function() {
@@ -64,8 +63,17 @@ Route::group([
     'as' => 'admin.users.updateRoles',
     'uses' => 'UserController@updateRoles'
   ]);
+  Route::get('roles/{role}/users/edit', [
+    'as' => 'admin.roles.editUsers',
+    'uses' => 'RoleController@editUsers'
+  ]);
+  Route::put('roles/{role}/users', [
+    'as' => 'admin.roles.updateUsers',
+    'uses' => 'RoleController@updateUsers'
+  ]);
   Route::resource('categories', 'CategoryController');
   Route::resource('boards', 'BoardController');
+  Route::resource('roles', 'RoleController');
   Route::resource('topics', 'TopicController', ['only' => ['edit', 'update', 'destroy']]);
   Route::resource('users', 'UserController', ['only' => ['index', 'show']]);
 });

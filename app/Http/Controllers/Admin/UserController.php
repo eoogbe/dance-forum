@@ -12,13 +12,25 @@ use App\Http\Controllers\Controller;
 class UserController extends Controller
 {
   /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
+
+  /**
    * Display a listing of the resource.
    *
    * @return \Illuminate\Http\Response
    */
   public function index()
   {
-    return view('admin.users.index', ['users' => User::paginate()]);
+    $this->authorize('index', User::class);
+
+    return view('admin.users.index', ['users' => User::orderBy('name')->paginate()]);
   }
 
   /**
@@ -29,7 +41,13 @@ class UserController extends Controller
    */
   public function show(User $user)
   {
-    return view('admin.users.show', compact('user'));
+    $this->authorize($user);
+
+    return view('admin.users.show', [
+      'user' => $user,
+      'permissions' => $user->permissions()->orderBy('name')->get(),
+      'roles' => $user->roles()->orderBy('name')->get(),
+    ]);
   }
 
   /**
@@ -40,7 +58,12 @@ class UserController extends Controller
    */
   public function editRoles(User $user)
   {
-    return view('admin.users.editRoles', ['user' => $user, 'roles' => Role::all()]);
+    $this->authorize('updateRoles', $user);
+
+    return view('admin.users.editRoles', [
+      'user' => $user,
+      'roles' => Role::orderBy('name')->get(),
+    ]);
   }
 
   /**
@@ -52,7 +75,9 @@ class UserController extends Controller
    */
   public function updateRoles(Request $request, User $user)
   {
-    $user->roles()->sync($request->role_ids);
+    $this->authorize($user);
+
+    $user->roles()->sync($request->role_ids ?: []);
 
     return redirect()->route('admin.users.show', compact('user'));
   }

@@ -30,7 +30,7 @@ class PostController extends Controller
    */
   public function create(Request $request, Topic $topic)
   {
-    $this->authorize('createPost', $topic);
+    $this->authorize('addPost', $topic);
 
     $parentPost = $topic->posts()->find($request->input('parent_id'));
 
@@ -50,8 +50,6 @@ class PostController extends Controller
    */
   public function store(PostRequest $request, Topic $topic)
   {
-    $this->authorize('createPost', $topic);
-
     $post = $request->user()->posts()->create([
       'topic_id' => $topic->id,
       'content' => $request->content,
@@ -83,8 +81,6 @@ class PostController extends Controller
    */
   public function update(PostRequest $request, Post $post)
   {
-    $this->authorize($post);
-
     $post->update([
       'content' => $request->content,
     ]);
@@ -117,6 +113,7 @@ class PostController extends Controller
   {
     $post = Post::withTrashed()->findOrFail($id);
     $this->authorize($post);
+    
     $post->restore();
 
     return redirect(Pagination::getPostUrl($post));

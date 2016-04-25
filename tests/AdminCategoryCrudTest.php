@@ -10,7 +10,7 @@ class AdminCategoryCrudTest extends TestCase
 
   public function testIndexCategory()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedFirst();
 
     $this->actingAs($user)
@@ -29,12 +29,12 @@ class AdminCategoryCrudTest extends TestCase
 
   public function testShowCategory()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedFirst();
 
     $this->actingAs($user)
       ->visit("/admin/categories/{$category->slug}")
-      ->see($category->name);
+      ->see("Manage {$category->name}");
   }
 
   public function testShowCategoryWithoutAdmin()
@@ -49,7 +49,7 @@ class AdminCategoryCrudTest extends TestCase
 
   public function testNewCategory()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = factory(App\Category::class)->make();
 
     $this->actingAs($user)
@@ -61,7 +61,7 @@ class AdminCategoryCrudTest extends TestCase
 
   public function testNewCategoryNameAbsent()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $this->actingAs($user)
       ->visit('/admin/categories/create')
@@ -71,7 +71,7 @@ class AdminCategoryCrudTest extends TestCase
 
   public function testNewCategoryNameTooLong()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $this->actingAs($user)
       ->visit('/admin/categories/create')
@@ -82,7 +82,7 @@ class AdminCategoryCrudTest extends TestCase
 
   public function testNewCategoryNameDuplicate()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedFirst();
 
     $this->actingAs($user)
@@ -91,7 +91,6 @@ class AdminCategoryCrudTest extends TestCase
       ->press('Create Category')
       ->see('The name has already been used.');
   }
-
 
   public function testNewCategoryWithoutAdmin()
   {
@@ -104,7 +103,7 @@ class AdminCategoryCrudTest extends TestCase
 
   public function testEditCategory()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $category = App\Category::sortedFirst();
     $updatedCategory = factory(App\Category::class)->make();
@@ -128,7 +127,7 @@ class AdminCategoryCrudTest extends TestCase
 
   public function testDeleteCategory()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedFirst();
 
     $this->actingAs($user)
@@ -142,7 +141,7 @@ class AdminCategoryCrudTest extends TestCase
     factory(App\Category::class)->create();
     factory(App\Category::class)->create();
 
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedLast();
 
     $this->actingAs($user)
@@ -160,7 +159,7 @@ class AdminCategoryCrudTest extends TestCase
     factory(App\Category::class)->create();
     factory(App\Category::class)->create();
 
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedLast();
 
     $this->actingAs($user)
@@ -178,7 +177,7 @@ class AdminCategoryCrudTest extends TestCase
     factory(App\Category::class)->create();
     factory(App\Category::class)->create();
 
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedFirst();
 
     $this->actingAs($user)
@@ -196,7 +195,7 @@ class AdminCategoryCrudTest extends TestCase
     factory(App\Category::class)->create();
     factory(App\Category::class)->create();
 
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedFirst();
 
     $this->actingAs($user)

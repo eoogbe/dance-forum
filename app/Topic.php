@@ -13,14 +13,14 @@ class Topic extends Model
    *
    * @var array
    */
-  protected $fillable = ['name', 'pinned_at'];
+  protected $fillable = ['name', 'pinned_at', 'locked_at'];
 
   /**
    * The attributes that should be mutated to dates.
    *
    * @var array
    */
-  protected $dates = ['pinned_at'];
+  protected $dates = ['pinned_at', 'locked_at'];
 
   /**
    * Get all the posts for the topic.
@@ -145,8 +145,6 @@ class Topic extends Model
    */
   public function isLocked()
   {
-    return !Role::where('name', 'member')
-      ->first()
-      ->hasPermission("createPost.topic.{$this->id}");
+    return !is_null($this->locked_at);
   }
 }

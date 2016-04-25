@@ -13,12 +13,24 @@ use App\Http\Controllers\Controller;
 class BoardController extends Controller
 {
   /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
+
+  /**
    * Display a listing of the resource.
    *
    * @return \Illuminate\Http\Response
    */
   public function index()
   {
+    $this->authorize('index', Board::class);
+
     return view('admin.boards.index', ['categories' => Category::orderBy('position')->get()]);
   }
 
@@ -30,6 +42,8 @@ class BoardController extends Controller
    */
   public function show(Board $board)
   {
+    $this->authorize($board);
+
     return view('admin.boards.show', compact('board'));
   }
 
@@ -40,7 +54,12 @@ class BoardController extends Controller
    */
   public function create()
   {
-    return view('admin.boards.create', ['board' => new Board(), 'categories' => Category::all()]);
+    $this->authorize('store', Board::class);
+
+    return view('admin.boards.create', [
+      'board' => new Board(),
+      'categories' => Category::orderBy('position')->get(),
+    ]);
   }
 
   /**
@@ -69,7 +88,12 @@ class BoardController extends Controller
    */
   public function edit(Board $board)
   {
-    return view('admin.boards.edit', ['board' => $board, 'categories' => Category::all()]);
+    $this->authorize('update', $board);
+
+    return view('admin.boards.edit', [
+      'board' => $board,
+      'categories' => Category::orderBy('position')->get(),
+    ]);
   }
 
   /**
@@ -106,6 +130,8 @@ class BoardController extends Controller
    */
   public function destroy(Board $board)
   {
+    $this->authorize($board);
+
     $board->delete();
 
     return redirect()->route('admin.boards.index');
@@ -120,11 +146,13 @@ class BoardController extends Controller
    */
   public function position(Request $request, Board $board)
   {
+    $this->authorize('update', $board);
+
     $swapBoard = Board::findOrFail($request->swap_id);
 
     $swapPosition = $swapBoard->position;
     $boardPosition = $board->position;
-    
+
     $board->update(['position' => -1]);
     $swapBoard->update(['position' => $boardPosition]);
     $board->update(['position' => $swapPosition]);

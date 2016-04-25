@@ -23,18 +23,10 @@ class AppServiceProvider extends ServiceProvider
       return "<?php if (Auth::check() && Auth::user()->hasRole{$expression}): ?>";
     });
 
-    User::created(function ($user) {
-      $user->roles()->attach(Role::where('name', 'member')->first());
-    });
-
-    Topic::created(function ($topic) {
-      Role::where('name', 'member')->first()->createPermission("createPost.topic.{$topic->id}");
-    });
-
     Post::created(function ($post) {
       $post->author->createPermission([
         "update.post.{$post->id}",
-        "destroy.post.{$post->id}",
+        "delete.post.{$post->id}",
       ]);
     });
   }

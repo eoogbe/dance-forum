@@ -7,40 +7,44 @@
       <p>{{ $board->postCount() }} {{ str_plural('post', $board->postCount()) }}</p>
       <p>{{ $board->viewCount() }} {{ str_plural('view', $board->viewCount()) }}</p>
       <ul>
-        @unless ($board->isFirst())
+        @can('update', $board)
+          @unless ($board->isFirst())
+            <li>
+              @include('admin.boards.swap_button', [
+                'swapBoard' => $board->category->firstBoard(),
+                'submitText' => 'first',
+              ])
+            </li>
+            <li>
+              @include('admin.boards.swap_button', [
+                'swapBoard' => $board->prevBoard(),
+                'submitText' => 'up',
+              ])
+            </li>
+          @endunless
+          @unless ($board->isLast())
+            <li>
+              @include('admin.boards.swap_button', [
+                'swapBoard' => $board->nextBoard(),
+                'submitText' => 'down',
+              ])
+            </li>
+            <li>
+              @include('admin.boards.swap_button', [
+                'swapBoard' => $board->category->lastBoard(),
+                'submitText' => 'last',
+              ])
+            </li>
+          @endunless
+          <li><a href="{{ route('admin.boards.edit', compact('board')) }}">edit</a></li>
+        @endcan
+        @can('destroy', $board)
           <li>
-            @include('admin.boards.swap_button', [
-              'swapBoard' => $board->category->firstBoard(),
-              'submitText' => 'first',
+            @include('common.delete', [
+              'deletePath' => route('admin.boards.destroy', compact('board')),
             ])
           </li>
-          <li>
-            @include('admin.boards.swap_button', [
-              'swapBoard' => $board->prevBoard(),
-              'submitText' => 'up',
-            ])
-          </li>
-        @endunless
-        @unless ($board->isLast())
-          <li>
-            @include('admin.boards.swap_button', [
-              'swapBoard' => $board->nextBoard(),
-              'submitText' => 'down',
-            ])
-          </li>
-          <li>
-            @include('admin.boards.swap_button', [
-              'swapBoard' => $board->category->lastBoard(),
-              'submitText' => 'last',
-            ])
-          </li>
-        @endunless
-        <li><a href="{{ route('admin.boards.edit', compact('board')) }}">edit</a></li>
-        <li>
-          @include('common.delete', [
-            'deletePath' => route('admin.boards.destroy', compact('board')),
-          ])
-        </li>
+        @endcan
       </ul>
     </li>
   @endforeach

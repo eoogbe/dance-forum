@@ -144,17 +144,4 @@ class User extends Authenticatable
     $permissionIds = Permission::whereIn('name', $names)->pluck('id')->toArray();
     $this->permissions()->attach(array_fill_keys($permissionIds, ['has_access' => true]));
   }
-
-  /**
-   * Detaches permissions with the given names from the user.
-   */
-  public function detachPermission($names)
-  {
-    if (!is_array($names)) {
-      $names = [$names];
-    }
-
-    $permissionIds = $this->permissions()->whereIn('name', $names)->getRelatedIds()->toArray();
-    $this->permissions()->detach($permissionIds);
-  }
 }

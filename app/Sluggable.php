@@ -36,7 +36,7 @@ trait Sluggable
   }
 
   /**
-   * Generate the slug from the name
+   * Generate the slug from the name.
    *
    * @param  string  $name
    * @return string

@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Auth;
+use Gate;
+use App\Post;
 use App\Http\Requests\Request;
 
 class PostRequest extends Request
@@ -14,7 +15,11 @@ class PostRequest extends Request
    */
   public function authorize()
   {
-    return Auth::check();
+    $topic = $this->route('topic');
+
+    return $topic
+      ? Gate::allows('addPost', $topic)
+      : Gate::allows('update', $this->route('post'));
   }
 
   /**

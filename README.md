@@ -9,6 +9,7 @@ A example forum so I can learn [Laravel](http://laravel.com).
 - Admin panel
 - WYSIWYG for formatted text
 - User roles
+  - CRUD operations (admin)
   - assign (admin)
 - Categories
   - CRUD operations (admin)

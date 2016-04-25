@@ -10,7 +10,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testIndexBoard()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = App\Board::orderBy('position')->first();
 
     $this->actingAs($user)
@@ -29,7 +29,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testShowBoard()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = App\Board::orderBy('position')->first();
 
     $this->actingAs($user)
@@ -49,7 +49,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testNewBoard()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = factory(App\Board::class)->make();
 
     $this->actingAs($user)
@@ -63,7 +63,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testNewBoardNameAbsent()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = factory(App\Board::class)->make();
 
     $this->actingAs($user)
@@ -76,7 +76,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testNewBoardNameTooLong()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = factory(App\Board::class)->make();
 
     $this->actingAs($user)
@@ -90,7 +90,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testNewBoardNameDuplicate()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedFirst();
     $board = factory(App\Board::class)->create();
 
@@ -105,7 +105,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testNewBoardNameAndCategoryDuplicate()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = factory(App\Board::class)->create();
 
     $this->actingAs($user)
@@ -119,7 +119,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testNewBoardDescrptionAbsent()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = factory(App\Board::class)->make();
 
     $this->actingAs($user)
@@ -141,7 +141,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testEditBoard()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
 
     $board = App\Board::orderBy('position')->first();
     $updatedBoard = factory(App\Board::class)->make();
@@ -167,7 +167,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testDeleteBoard()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = App\Board::orderBy('position')->first();
 
     $this->actingAs($user)
@@ -178,7 +178,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testPositionBoardFirst()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedFirst();
     $board = factory(App\Board::class)->create(['category_id' => $category->id]);
 
@@ -194,7 +194,7 @@ class AdminBoardCrudTest extends TestCase
 
   public function testPositionBoardUp()
   {
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $category = App\Category::sortedFirst();
     $board = factory(App\Board::class)->create(['category_id' => $category->id]);
 
@@ -213,7 +213,7 @@ class AdminBoardCrudTest extends TestCase
     $category = App\Category::sortedFirst();
     factory(App\Board::class)->create(['category_id' => $category->id]);
 
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = $category->firstBoard();
 
     $this->actingAs($user)
@@ -231,7 +231,7 @@ class AdminBoardCrudTest extends TestCase
     $category = App\Category::sortedFirst();
     factory(App\Board::class)->create(['category_id' => $category->id]);
 
-    $user = App\Role::where('name', 'admin')->first()->users()->first();
+    $user = App\Role::where('name', 'Admin')->first()->users()->first();
     $board = $category->firstBoard();
 
     $this->actingAs($user)

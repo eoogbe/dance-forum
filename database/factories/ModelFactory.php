@@ -20,6 +20,15 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
   ];
 });
 
+$factory->define(App\Role::class, function (Faker\Generator $faker) {
+  return [
+    'name' => str_random(6),
+    'slug' => function ($category) {
+      return str_slug($category['name']);
+    },
+  ];
+});
+
 $factory->define(App\Category::class, function (Faker\Generator $faker) {
   return [
     'name' => str_random(6),
