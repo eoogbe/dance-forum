@@ -75,7 +75,7 @@ class Topic extends Model
    */
   public function firstPost()
   {
-    return $this->posts()->oldest()->first();
+    return $this->postsWithTrashed()->first();
   }
 
   /**
