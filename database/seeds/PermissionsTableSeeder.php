@@ -15,8 +15,9 @@ class PermissionsTableSeeder extends Seeder
   {
     $names = [
       'viewAdminPanel', 'create', 'update', 'delete',
-      'viewAdminPanel.user', 'updateRoles.user',
-      'viewAdminPanel.role', 'create.role', 'update.role', 'delete.role', 'updateUsers.role',
+      'viewAdminPanel.user', 'update.user',
+      'viewAdminPanel.role', 'create.role', 'update.role', 'delete.role',
+      'update.permissions',
       'create.category', 'update.category', 'delete.category',
       'viewAdminPanel.board', 'create.board', 'update.board', 'delete.board',
       'update.topic', 'delete.topic', 'lock.topic', 'pin.topic',

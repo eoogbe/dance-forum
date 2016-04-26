@@ -15,7 +15,7 @@ class RolesTableSeeder extends Seeder
   {
     Role::create(['name' => 'Admin'])->attachPermission([
       'create', 'update', 'delete', 'viewAdminPanel',
-      'updateRoles.user', 'updateUsers.role', 'lock.topic', 'pin.topic', 'restore.post',
+      'lock.topic', 'pin.topic', 'restore.post',
     ]);
   }
 }

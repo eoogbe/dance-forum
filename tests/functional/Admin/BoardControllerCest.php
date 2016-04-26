@@ -277,4 +277,50 @@ class BoardControllerCest
     $I->click('last', 'section > ul > li:first-child');
     $I->see($board->name, 'section > ul > li:last-child');
   }
+
+  public function updateBoardPermissions(FunctionalTester $I, \Page\Login $loginPage)
+  {
+    $I->am('Admin');
+    $I->wantTo('update the permissions assigned to a board');
+
+    $password = str_random(12);
+    $admin = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $adminRole = $I->grabRole();
+    $admin->roles()->attach($adminRole);
+    $loginPage->login($admin->email, $password);
+
+    $user = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $role = $I->createModel('App\Role');
+    $role->attachPermission('viewAdminPanel.board');
+    $user->roles()->attach($role);
+
+    $board = $I->createModel('App\Board');
+    $role->createPermission("delete.board.{$board->id}");
+    $I->amOnRoute('admin.boards.editPermissions', compact('board'));
+
+    $I->submitForm('form', ['update_roles' => [$adminRole->id, $role->id], 'destroy_roles' => [$adminRole->id]]);
+
+    $I->amOnRoute('admin.boards.show', compact('board'));
+    $I->seeLink('edit');
+    $I->see('delete');
+
+    $I->click('logout');
+    $loginPage->login($user->email, $password);
+    $I->amOnRoute('admin.boards.show', compact('board'));
+    $I->seeLink('edit');
+    $I->dontSee('delete');
+  }
+
+  public function preventUpdateBoardPermissionsWithoutAdmin(FunctionalTester $I)
+  {
+    $I->am('User');
+    $I->wantTo('be prevented from updating the permissions assigned to a board');
+
+    $user = $I->createModel('App\User');
+    $I->amLoggedAs($user);
+
+    $board = $I->createModel('App\Board');
+    $I->amOnRoute('admin.boards.editPermissions', compact('board'));
+    $I->see('Access denied');
+  }
 }

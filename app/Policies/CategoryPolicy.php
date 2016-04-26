@@ -19,7 +19,7 @@ class CategoryPolicy
   */
   public function index(User $user)
   {
-    return $user->hasPermission('viewAdminPanel.board');
+    return $user->isAllowedTo('viewAdminPanel.board');
   }
 
   /**
@@ -31,7 +31,7 @@ class CategoryPolicy
   */
   public function show(User $user, Category $category)
   {
-    return $user->hasPermission('viewAdminPanel.board');
+    return $user->isAllowedTo('viewAdminPanel.board');
   }
 
   /**
@@ -42,7 +42,7 @@ class CategoryPolicy
   */
   public function store(User $user)
   {
-    return $user->hasPermission('create.category');
+    return $user->isAllowedTo('create.category');
   }
 
   /**
@@ -54,7 +54,7 @@ class CategoryPolicy
    */
   public function update(User $user, Category $category)
   {
-    return $user->hasPermission("update.category.{$category->id}");
+    return $user->isAllowedTo("update.category.{$category->id}");
   }
 
   /**
@@ -66,6 +66,6 @@ class CategoryPolicy
    */
   public function destroy(User $user, Category $category)
   {
-    return $user->hasPermission("delete.category.{$category->id}");
+    return $user->isAllowedTo("delete.category.{$category->id}");
   }
 }

@@ -19,7 +19,7 @@ class BoardPolicy
   */
   public function index(User $user)
   {
-    return $user->hasPermission('viewAdminPanel.board');
+    return $user->isAllowedTo('viewAdminPanel.board');
   }
 
   /**
@@ -31,7 +31,7 @@ class BoardPolicy
   */
   public function show(User $user, Board $board)
   {
-    return $user->hasPermission('viewAdminPanel.board');
+    return $user->isAllowedTo('viewAdminPanel.board');
   }
 
   /**
@@ -42,7 +42,7 @@ class BoardPolicy
   */
   public function store(User $user)
   {
-    return $user->hasPermission('create.board');
+    return $user->isAllowedTo('create.board');
   }
 
   /**
@@ -54,7 +54,7 @@ class BoardPolicy
    */
   public function update(User $user, Board $board)
   {
-    return $user->hasPermission("update.board.{$board->id}");
+    return $user->isAllowedTo("update.board.{$board->id}");
   }
 
   /**
@@ -66,6 +66,18 @@ class BoardPolicy
    */
   public function destroy(User $user, Board $board)
   {
-    return $user->hasPermission("delete.board.{$board->id}");
+    return $user->isAllowedTo("delete.board.{$board->id}");
+  }
+
+  /**
+   * Determine if the given user can update permissions for the given board.
+   *
+   * @param  User  $user
+   * @param  Board  $board
+   * @return bool
+   */
+  public function updatePermissions(User $user, Board $board)
+  {
+    return $user->isAllowedTo('update.permission');
   }
 }

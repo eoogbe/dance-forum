@@ -25,14 +25,14 @@ Manage {{ $user->name }}
 
   <section>
     <h3>User Permissions</h3>
-    @if ($permissions->isEmpty())
-      <p>No permissions</p>
-    @else
+    @if ($permissions->exists())
       <ul>
-        @foreach($permissions as $permission)
+        @foreach($permissions->get() as $permission)
         <li>{{ $permission->generateDisplayName() }}</li>
         @endforeach
       </ul>
+    @else
+      <p>No permissions</p>
     @endif
   </section>
 

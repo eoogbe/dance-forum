@@ -6,6 +6,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+  use Permissible;
+
   /**
    * The attributes that are mass assignable.
    *
@@ -58,14 +60,6 @@ class User extends Authenticatable
   }
 
   /**
-  * Get all the permissions for the user.
-  */
-  public function permissions()
-  {
-    return $this->belongsToMany(Permission::class)->withPivot('has_access');
-  }
-
-  /**
    * Get the number of posts for the user.
    */
   public function postCount()
@@ -84,64 +78,21 @@ class User extends Authenticatable
   /**
    * Checks if the user has a permission with the given name.
    */
-  public function hasPermission($name)
+  public function isAllowedTo($name)
   {
-    $names = $this->parsePermissionNames($name);
-
-    $userPermission = $this->permissions()->whereIn('name', $names)->first();
+    $names = Permission::parseNames($name);
+    $userPermission = $this->permissions()->byNames($names)->first();
 
     if ($userPermission) {
       return $userPermission->pivot->has_access;
     }
 
     foreach ($this->roles as $role) {
-      if ($role->hasPermission($names)) {
+      if ($role->isAllowedTo($names)) {
         return true;
       }
     }
 
     return false;
-  }
-
-  /**
-   * Breaks down the permission name into an array of the permissions represented by its parts.
-   */
-  private function parsePermissionNames($name)
-  {
-    $names = [$name];
-
-    for ($i = strpos($name, '.'); $i !== false; $i = strpos($name, '.', $i + 1)) {
-      $names[] = substr($name, 0, $i);
-    }
-
-    return $names;
-  }
-
-  /**
-   * Creates permissions with the given names for the user.
-   */
-  public function createPermission($names)
-  {
-    if (!is_array($names)) {
-      $names = [$names];
-    }
-
-    foreach ($names as $name) {
-      $permission = Permission::create(compact('name'));
-      $this->permissions()->attach($permission, ['has_access' => true]);
-    }
-  }
-
-  /**
-   * Attaches existing permissions with the given names to the user.
-   */
-  public function attachPermission($names)
-  {
-    if (!is_array($names)) {
-      $names = [$names];
-    }
-
-    $permissionIds = Permission::whereIn('name', $names)->pluck('id')->toArray();
-    $this->permissions()->attach(array_fill_keys($permissionIds, ['has_access' => true]));
   }
 }

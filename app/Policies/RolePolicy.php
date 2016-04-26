@@ -19,7 +19,7 @@ class RolePolicy
   */
   public function index(User $user)
   {
-    return $user->hasPermission('viewAdminPanel.role');
+    return $user->isAllowedTo('viewAdminPanel.role');
   }
 
   /**
@@ -31,7 +31,7 @@ class RolePolicy
   */
   public function show(User $user, Role $role)
   {
-    return $user->hasPermission('viewAdminPanel.role');
+    return $user->isAllowedTo('viewAdminPanel.role');
   }
 
   /**
@@ -42,7 +42,7 @@ class RolePolicy
   */
   public function store(User $user)
   {
-    return $user->hasPermission('create.role');
+    return $user->isAllowedTo('create.role');
   }
 
   /**
@@ -54,7 +54,7 @@ class RolePolicy
    */
   public function update(User $user, Role $role)
   {
-    return $user->hasPermission("update.role.{$role->id}");
+    return $user->isAllowedTo("update.role.{$role->id}");
   }
 
   /**
@@ -66,18 +66,18 @@ class RolePolicy
    */
   public function destroy(User $user, Role $role)
   {
-    return $user->hasPermission("delete.role.{$role->id}");
+    return $user->isAllowedTo("delete.role.{$role->id}");
   }
 
   /**
-  * Determine if the given user can update users for the given role.
-  *
-  * @param  User  $user
-  * @param  Role  $role
-  * @return bool
-  */
+   * Determine if the given user can update users for the given role.
+   *
+   * @param  User  $user
+   * @param  Role  $role
+   * @return bool
+   */
   public function updateUsers(User $user, Role $role)
   {
-    return $user->hasPermission("updateUsers.role.{$role->id}");
+    return $user->isAllowedTo("update.role.{$role->id}");
   }
 }

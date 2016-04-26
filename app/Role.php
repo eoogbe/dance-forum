@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-  use Sluggable;
+  use Permissible, Sluggable;
 
   /**
    * The attributes that are mass assignable.
@@ -24,43 +24,67 @@ class Role extends Model
   }
 
   /**
-  * Get all the permissions for the role.
-  */
-  public function permissions()
+   * Checks if the role has a permission with the given name.
+   */
+  public function isAllowedTo($name)
   {
-    return $this->belongsToMany(Permission::class);
+    $names = is_array($name) ? $name : Permission::parseNames($name);
+    $permission = $this->permissions()->byNames($names)->first();
+
+    return $permission ? $permission->pivot->has_access : false;
   }
 
   /**
-   * Checks if the role has a permission with one of the given names.
+   * Allows the role the permission with the given name.
    */
-  public function hasPermission($names)
+  public function allow($name)
   {
-    return $this->permissions()->whereIn('name', (array) $names)->exists();
-  }
+    $permission = $this->permissions()->byNames(Permission::parseNames($name))->first();
 
-  /**
-   * Creates permissions with the given names for the role.
-   */
-  public function createPermission($names)
-  {
-    $records = array_map(function($name) {
-      return compact('name');
-    }, (array) $names);
-
-    $this->permissions()->createMany($records);
-  }
-
-  /**
-   * Attaches existing permissions with the given names to the role.
-   */
-  public function attachPermission($names)
-  {
-    if (!is_array($names)) {
-      $names = [$names];
+    if (!($permission && ($permission->name === $name || $permission->pivot->has_access))) {
+      $permission = Permission::firstOrCreate(['name' => $name]);
+      $this->permissions()->attach($permission, ['has_access' => true]);
+    } else if ($permission->name === $name) {
+      $this->permissions()->updateExistingPivot($permission->id, ['has_access' => true]);
     }
+  }
 
-    $permissionIds = Permission::whereIn('name', $names)->pluck('id')->toArray();
-    $this->permissions()->attach($permissionIds);
+  /**
+   * Denies the role the permission with the given name.
+   */
+  public function deny($name)
+  {
+    $permission = $this->permissions()->where('name', $name)->first();
+
+    if ($permission) {
+      $this->permissions()->updateExistingPivot($permission->id, ['has_access' => false]);
+    }
+  }
+
+  /**
+   * Add all the permissions with the given ids to the role and remove the general permissions in
+   * the role whose ids are not given.
+   */
+  public function setGeneralPermissions($generalPermissionIds)
+  {
+    $specificPermissions = $this->permissions()->minDepth(2);
+
+    $allowedPermissionIds = $specificPermissions
+      ->wherePivot('has_access', true)
+      ->getRelatedIds()
+      ->toArray();
+
+    $deniedPermissionIds = $specificPermissions
+      ->wherePivot('has_access', false)
+      ->getRelatedIds()
+      ->toArray();
+
+    $permissionIds = array_merge(
+      array_fill_keys($generalPermissionIds, ['has_access' => true]),
+      array_fill_keys($allowedPermissionIds, ['has_access' => true]),
+      array_fill_keys($deniedPermissionIds, ['has_access', false])
+    );
+
+    $this->permissions()->sync($permissionIds);
   }
 }

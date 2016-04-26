@@ -45,7 +45,7 @@ class UserController extends Controller
 
     return view('admin.users.show', [
       'user' => $user,
-      'permissions' => $user->permissions()->orderBy('name')->get(),
+      'permissions' => $user->allowedPermissions(),
       'roles' => $user->roles()->orderBy('name')->get(),
     ]);
   }

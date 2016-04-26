@@ -31,7 +31,12 @@
         <li><a href="{{ url('/login') }}">login</a></li>
         <li><a href="{{ url('/register') }}">register</a></li>
       @else
-        <li><a href="{{ url('/logout') }}">logout</a></li>
+        <li>
+          <button type="button">{{ Auth::user()->name }}</button>
+          <ul>
+            <li><a href="{{ url('/logout') }}">logout</a></li>
+          </ul>
+        </li>
       @endif
     </ul>
   </header>

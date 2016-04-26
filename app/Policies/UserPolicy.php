@@ -18,7 +18,7 @@ class UserPolicy
   */
   public function index(User $user)
   {
-    return $user->hasPermission('viewAdminPanel.user');
+    return $user->isAllowedTo('viewAdminPanel.user');
   }
 
   /**
@@ -30,7 +30,7 @@ class UserPolicy
   */
   public function show(User $user, User $model)
   {
-    return $user->hasPermission('viewAdminPanel.user');
+    return $user->isAllowedTo('viewAdminPanel.user');
   }
 
   /**
@@ -42,6 +42,6 @@ class UserPolicy
   */
   public function updateRoles(User $user, User $model)
   {
-    return $user->hasPermission("updateRoles.user.{$model->id}");
+    return $user->isAllowedTo("update.user.{$model->id}");
   }
 }

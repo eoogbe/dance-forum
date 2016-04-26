@@ -8,9 +8,9 @@ use App\Board;
 
 class Functional extends \Codeception\Module
 {
-  public function grabAdmin()
+  public function grabRole()
   {
-    return Role::where('name', 'Admin')->first()->users()->first();
+    return Role::where('name', 'Admin')->first();
   }
 
   public function grabPermission()

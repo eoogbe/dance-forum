@@ -127,7 +127,7 @@ class TopicControllerCest
     $I->dontSee('reply');
 
     $I->amLoggedAs($topic->firstPost()->author);
-    $I->dontSee('edit', 'section > ol > li');
+    $I->dontSee('edit', 'section > ol > li a');
     $I->dontSee('delete', 'section > ol > li');
   }
 

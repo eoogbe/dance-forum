@@ -18,6 +18,7 @@ A example forum so I can learn [Laravel](http://laravel.com).
   - CRUD operations (admin)
   - order (admin)
   - user view count
+  - permissions (admin)
 - Topics
   - create
   - edit (admin)

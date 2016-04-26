@@ -39,6 +39,14 @@ Route::group([
     'as' => 'admin.boards.position',
     'uses' => 'BoardController@position'
   ]);
+  Route::get('boards/{board}/permissions/edit', [
+    'as' => 'admin.boards.editPermissions',
+    'uses' => 'BoardController@editPermissions'
+  ]);
+  Route::put('boards/{board}/permissions', [
+    'as' => 'admin.boards.updatePermissions',
+    'uses' => 'BoardController@updatePermissions'
+  ]);
   Route::post('topics/{topic}/pin', [
     'as' => 'admin.topics.pin',
     'uses' => 'TopicController@pin'

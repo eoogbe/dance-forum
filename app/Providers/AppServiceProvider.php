@@ -5,9 +5,6 @@ namespace App\Providers;
 use Blade;
 use Illuminate\Support\ServiceProvider;
 
-use App\User;
-use App\Role;
-use App\Topic;
 use App\Post;
 
 class AppServiceProvider extends ServiceProvider

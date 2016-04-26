@@ -47,7 +47,7 @@ class RoleController extends Controller
 
     return view('admin.roles.show', [
       'role' => $role,
-      'permissions' => $role->permissions()->orderBy('name')->get(),
+      'permissions' => $role->allowedPermissions(),
       'users' => $role->users()->orderBy('name')->paginate(),
     ]);
   }
@@ -63,7 +63,7 @@ class RoleController extends Controller
 
     return view('admin.roles.create', [
       'role' => new Role(),
-      'permissions' => Permission::maxDepth(2)->orderBy('name')->get(),
+      'permissions' => Permission::maxDepth(1)->orderBy('name')->get(),
     ]);
   }
 
@@ -78,7 +78,11 @@ class RoleController extends Controller
     $role = Role::create([
       'name' => $request->name,
     ]);
-    $role->permissions()->sync($request->permission_ids ?: []);
+
+    if ($request->permission_ids) {
+      $permissionIds = array_fill_keys($request->permission_ids, ['has_access' => true]);
+      $role->permissions()->attach($permissionIds);
+    }
 
     return redirect()->route('admin.roles.show', compact('role'));
   }
@@ -95,7 +99,7 @@ class RoleController extends Controller
 
     return view('admin.roles.edit', [
       'role' => $role,
-      'permissions' => Permission::maxDepth(2)->orderBy('name')->get(),
+      'permissions' => Permission::maxDepth(1)->orderBy('name')->get(),
     ]);
   }
 
@@ -111,7 +115,7 @@ class RoleController extends Controller
     $role->update([
       'name' => $request->name,
     ]);
-    $role->permissions()->sync($request->permission_ids ?: []);
+    $role->setGeneralPermissions($request->permission_ids ?: []);
 
     return redirect()->route('admin.roles.show', compact('role'));
   }

@@ -20,7 +20,7 @@ class TopicPolicy
    */
   public function update(User $user, Topic $topic)
   {
-    return $user->hasPermission("update.topic.{$topic->id}");
+    return $user->isAllowedTo("update.topic.{$topic->id}");
   }
 
   /**
@@ -32,7 +32,7 @@ class TopicPolicy
    */
   public function destroy(User $user, Topic $topic)
   {
-    return $user->hasPermission("delete.topic.{$topic->id}");
+    return $user->isAllowedTo("delete.topic.{$topic->id}");
   }
 
   /**
@@ -56,7 +56,7 @@ class TopicPolicy
    */
   public function lock(User $user, Topic $topic)
   {
-    return $user->hasPermission("lock.topic.{$topic->id}");
+    return $user->isAllowedTo("lock.topic.{$topic->id}");
   }
 
   /**
@@ -68,6 +68,6 @@ class TopicPolicy
    */
   public function pin(User $user, Topic $topic)
   {
-    return $user->hasPermission("pin.topic.{$topic->id}");
+    return $user->isAllowedTo("pin.topic.{$topic->id}");
   }
 }

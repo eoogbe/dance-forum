@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 
-use App\Category;
 use App\Board;
+use App\Role;
+use App\Category;
 use App\Http\Requests\StoreBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
 use App\Http\Controllers\Controller;
@@ -158,5 +159,55 @@ class BoardController extends Controller
     $board->update(['position' => $swapPosition]);
 
     return back();
+  }
+
+  /**
+   * Show the form for editing the permissions of the specified resource.
+   *
+   * @param  Board  $board
+   * @return \Illuminate\Http\Response
+   */
+  public function editPermissions(Board $board)
+  {
+    $this->authorize('updatePermissions', $board);
+
+    return view('admin.boards.editPermissions', [
+      'board' => $board,
+      'roles' => Role::orderBy('name')->get(),
+    ]);
+  }
+
+  /**
+   * Update the permissions of the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  Board  $board
+   * @return \Illuminate\Http\Response
+   */
+  public function updatePermissions(Request $request, Board $board)
+  {
+    $this->authorize($board);
+
+    $updateRoles = $request->update_roles ?: [];
+    $destroyRoles = $request->destroy_roles ?: [];
+
+    $updatePermissionName = "update.board.{$board->id}";
+    $destroyPermissionName = "delete.board.{$board->id}";
+
+    foreach (Role::all() as $role) {
+      if (in_array($role->id, $updateRoles)) {
+        $role->allow($updatePermissionName);
+      } else {
+        $role->deny($updatePermissionName);
+      }
+
+      if (in_array($role->id, $destroyRoles)) {
+        $role->allow($destroyPermissionName);
+      } else {
+        $role->deny($destroyPermissionName);
+      }
+    }
+
+    return redirect()->route('admin.boards.show', compact('board'));
   }
 }

@@ -20,7 +20,7 @@ class PostPolicy
    */
   public function update(User $user, Post $post)
   {
-    return !$post->topic->isLocked() && $user->hasPermission("update.post.{$post->id}");
+    return !$post->topic->isLocked() && $user->isAllowedTo("update.post.{$post->id}");
   }
 
   /**
@@ -32,7 +32,7 @@ class PostPolicy
    */
   public function destroy(User $user, Post $post)
   {
-    return !$post->topic->isLocked() && $user->hasPermission("delete.post.{$post->id}");
+    return !$post->topic->isLocked() && $user->isAllowedTo("delete.post.{$post->id}");
   }
 
   /**
@@ -44,6 +44,6 @@ class PostPolicy
    */
   public function restore(User $user, Post $post)
   {
-    return $user->hasPermission("restore.post.{$post->id}");
+    return $user->isAllowedTo("restore.post.{$post->id}");
   }
 }
