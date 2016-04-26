@@ -28,6 +28,7 @@ A example forum so I can learn [Laravel](http://laravel.com).
   - user view count
   - pin (admin)
   - lock (admin)
+  - hide (admin)
   - permissions (admin)
 - Posts
   - create
@@ -39,7 +40,6 @@ A example forum so I can learn [Laravel](http://laravel.com).
 ## TODO
 
 - moderators
-- hide topics
 - undo/redo delete
 - user profiles
 - subscriptions

@@ -12,6 +12,20 @@ class TopicPolicy
   use HandlesAuthorization;
 
   /**
+  * Determine if the given user can view the given topic.
+  *
+  * @param  User  $user
+  * @param  Topic  $topic
+  * @return bool
+  */
+  public function show(User $user, Topic $topic)
+  {
+    return !$topic->isHidden() ||
+      $user->isAllowedTo("update.topic.{$topic->id}") ||
+      $this->isAllowedTo("delete.topic.{$topic->id}");
+  }
+
+  /**
    * Determine if the given user can update the given topic.
    *
    * @param  User  $user
@@ -52,6 +66,18 @@ class TopicPolicy
   }
 
   /**
+  * Determine if the given user can pin the given topic.
+  *
+  * @param  User  $user
+  * @param  Topic  $topic
+  * @return bool
+  */
+  public function pin(User $user, Topic $topic)
+  {
+    return $this->update($user, $topic);
+  }
+
+  /**
    * Determine if the given user can lock the given topic.
    *
    * @param  User  $user
@@ -64,13 +90,13 @@ class TopicPolicy
   }
 
   /**
-   * Determine if the given user can pin the given topic.
+   * Determine if the given user can hide the given topic.
    *
    * @param  User  $user
    * @param  Topic  $topic
    * @return bool
    */
-  public function pin(User $user, Topic $topic)
+  public function hide(User $user, Topic $topic)
   {
     return $this->update($user, $topic);
   }

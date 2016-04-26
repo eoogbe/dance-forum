@@ -127,6 +127,36 @@ class TopicController extends Controller
   }
 
   /**
+   * Hides the specified resource.
+   *
+   * @param  Topic  $topic
+   * @return \Illuminate\Http\Response
+   */
+  public function hide(Topic $topic)
+  {
+    $this->authorize($topic);
+
+    $topic->update(['hidden_at' => Carbon::now()]);
+
+    return redirect()->route('boards.show', ['board' => $topic->board]);
+  }
+
+  /**
+   * Unmarks the specified resource as hidden.
+   *
+   * @param  Topic  $topic
+   * @return \Illuminate\Http\Response
+   */
+  public function unhide(Topic $topic)
+  {
+    $this->authorize('hide', $topic);
+
+    $topic->update(['hidden_at' => null]);
+
+    return redirect()->route('boards.show', ['board' => $topic->board]);
+  }
+
+  /**
    * Show the form for editing the permissions of the specified resource.
    *
    * @param  Topic  $topic

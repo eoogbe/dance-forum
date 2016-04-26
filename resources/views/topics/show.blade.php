@@ -65,6 +65,21 @@
           @endif
         </li>
       @endcan
+      @can('hide', $topic)
+        <li>
+          @if ($topic->isHidden())
+            <form method="post" action="{{ route('admin.topics.unhide', compact('topic')) }}">
+              {!! csrf_field() !!}
+              <button type="submit">show</button>
+            </form>
+          @else
+            <form method="post" action="{{ route('admin.topics.hide', compact('topic')) }}">
+              {!! csrf_field() !!}
+              <button type="submit">hide</button>
+            </form>
+          @endif
+        </li>
+      @endcan
     </ul>
   </header>
 

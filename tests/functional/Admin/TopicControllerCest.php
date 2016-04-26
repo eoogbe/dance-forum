@@ -17,11 +17,12 @@ class TopicControllerCest
 
     $topic = $I->createTopic();
     $I->amOnRoute('topics.show', compact('topic'));
+    $I->dontSee('manage permissions', 'header');
     $I->dontSeeLink('edit');
     $I->dontSee('delete', 'header');
     $I->dontSee('pin', 'header');
     $I->dontSee('lock', 'header');
-    $I->dontSee('manage permissions', 'header');
+    $I->dontSee('hide', 'header');
   }
 
   public function updateTopic(FunctionalTester $I)
@@ -151,6 +152,44 @@ class TopicControllerCest
     $I->amLoggedAs($topic->firstPost()->author);
     $I->see('edit', 'section > ol > li');
     $I->see('delete', 'section > ol > li');
+  }
+
+  public function hideTopic(FunctionalTester $I)
+  {
+    $I->am('Admin');
+    $I->wantTo('hide a topic');
+
+    $admin = $I->grabAdmin();
+    $I->amLoggedAs($admin);
+
+    $topic = $I->createTopic();
+    $I->amOnRoute('topics.show', compact('topic'));
+    $I->click('hide');
+    $I->see('hidden');
+
+    $user = $I->createModel('App\User');
+    $I->amLoggedAs($user);
+    $I->amOnRoute('boards.show', ['board' => $topic->board]);
+    $I->dontSee($topic->name);
+  }
+
+  public function unhideTopic(FunctionalTester $I)
+  {
+    $I->am('Admin');
+    $I->wantTo('unmark a topic as hidden');
+
+    $admin = $I->grabAdmin();
+    $I->amLoggedAs($admin);
+
+    $topic = $I->createTopic(['hidden_at' => Carbon::now()]);
+    $I->amOnRoute('topics.show', compact('topic'));
+    $I->click('show');
+    $I->dontSee('hidden');
+
+    $user = $I->createModel('App\User');
+    $I->amLoggedAs($user);
+    $I->amOnRoute('boards.show', ['board' => $topic->board]);
+    $I->see($topic->name);
   }
 
   public function updateTopicPermissions(FunctionalTester $I, \Page\Login $loginPage)

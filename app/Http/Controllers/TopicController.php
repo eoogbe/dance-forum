@@ -29,6 +29,10 @@ class TopicController extends Controller
   */
   public function show(Topic $topic)
   {
+    if ($topic->isHidden()) {
+      $this->authorize($topic);
+    }
+
     if (Auth::check()) {
       $topic->views()->firstOrCreate(['user_id' => Auth::id()])->increment('count');
     }

@@ -13,14 +13,14 @@ class Topic extends Model
    *
    * @var array
    */
-  protected $fillable = ['name', 'pinned_at', 'locked_at'];
+  protected $fillable = ['name', 'pinned_at', 'locked_at', 'hidden_at'];
 
   /**
    * The attributes that should be mutated to dates.
    *
    * @var array
    */
-  protected $dates = ['pinned_at', 'locked_at'];
+  protected $dates = ['pinned_at', 'locked_at', 'hidden_at'];
 
   /**
    * Get all the posts for the topic.
@@ -146,5 +146,13 @@ class Topic extends Model
   public function isLocked()
   {
     return !is_null($this->locked_at);
+  }
+
+  /**
+   * Check if the topic is hidden.
+   */
+  public function isHidden()
+  {
+    return !is_null($this->hidden_at);
   }
 }

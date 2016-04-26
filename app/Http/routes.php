@@ -71,6 +71,14 @@ Route::group([
     'as' => 'admin.topics.unlock',
     'uses' => 'TopicController@unlock'
   ]);
+  Route::post('topics/{topic}/hide', [
+    'as' => 'admin.topics.hide',
+    'uses' => 'TopicController@hide'
+  ]);
+  Route::post('topics/{topic}/show', [
+    'as' => 'admin.topics.unhide',
+    'uses' => 'TopicController@unhide'
+  ]);
   Route::get('topics/{topic}/permissions/edit', [
     'as' => 'admin.topics.editPermissions',
     'uses' => 'TopicController@editPermissions'

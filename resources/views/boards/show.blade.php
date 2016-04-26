@@ -21,28 +21,33 @@
   {!! $topics->links() !!}
   <ul>
     @foreach ($topics as $topic)
-      <li>
-        @if ($topic->isLocked())
-          <p>locked</p>
-        @endif
-        @if ($topic->isPinned())
-          <p>pinned</p>
-        @endif
-        @if (Auth::check() && $topic->hasNewPosts(Auth::user()))
-          <p><a href="{{ Pagination::getPostUrl($topic->firstNewPost(Auth::user())) }}">new</a></p>
-        @endif
-        <p>@include('topics.link')</p>
-        <p>created by <cite>{{ $topic->authorName() }}</cite></p>
-        @if ($topic->lastPost())
-          <p>
-            Last post
-            @include('posts.link', ['post' => $topic->lastPost()])
-            by <cite>{{ $topic->lastPost()->authorName() }}</cite>
-          </p>
-        @endif
-        <p>{{ $topic->postCount() }} {{ str_plural('post', $topic->postCount()) }}</p>
-        <p>{{ $topic->viewCount() }} {{ str_plural('view', $topic->viewCount()) }}</p>
-      </li>
+      @if (!$topic->isHidden() || (Auth::check() && Auth::user()->can('show', $topic)))
+        <li>
+          @if ($topic->isLocked())
+            <p>locked</p>
+          @endif
+          @if ($topic->isPinned())
+            <p>pinned</p>
+          @endif
+          @if ($topic->isHidden())
+            <p>hidden</p>
+          @endif
+          @if (Auth::check() && $topic->hasNewPosts(Auth::user()))
+            <p><a href="{{ Pagination::getPostUrl($topic->firstNewPost(Auth::user())) }}">new</a></p>
+          @endif
+          <p>@include('topics.link')</p>
+          <p>created by <cite>{{ $topic->authorName() }}</cite></p>
+          @if ($topic->lastPost())
+            <p>
+              Last post
+              @include('posts.link', ['post' => $topic->lastPost()])
+              by <cite>{{ $topic->lastPost()->authorName() }}</cite>
+            </p>
+          @endif
+          <p>{{ $topic->postCount() }} {{ str_plural('post', $topic->postCount()) }}</p>
+          <p>{{ $topic->viewCount() }} {{ str_plural('view', $topic->viewCount()) }}</p>
+        </li>
+      @endcan
     @endforeach
   </ul>
   {!! $topics->links() !!}
