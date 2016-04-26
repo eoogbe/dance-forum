@@ -68,4 +68,16 @@ class CategoryPolicy
   {
     return $user->isAllowedTo("delete.category.{$category->id}");
   }
+
+  /**
+   * Determine if the given user can update permissions for the given category.
+   *
+   * @param  User  $user
+   * @param  Category  $category
+   * @return bool
+   */
+  public function updatePermissions(User $user, Category $category)
+  {
+    return $user->isAllowedTo('update.permission');
+  }
 }

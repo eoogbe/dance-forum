@@ -65,26 +65,16 @@ class Role extends Model
    * Add all the permissions with the given ids to the role and remove the general permissions in
    * the role whose ids are not given.
    */
-  public function setGeneralPermissions($generalPermissionIds)
+  public function setGeneralPermissions($permissionIds)
   {
-    $specificPermissions = $this->permissions()->minDepth(2);
+    foreach (Permission::maxDepth(1) as $permission) {
+      $isAllowed = in_array($permission->id, $permissionIds);
 
-    $allowedPermissionIds = $specificPermissions
-      ->wherePivot('has_access', true)
-      ->getRelatedIds()
-      ->toArray();
-
-    $deniedPermissionIds = $specificPermissions
-      ->wherePivot('has_access', false)
-      ->getRelatedIds()
-      ->toArray();
-
-    $permissionIds = array_merge(
-      array_fill_keys($generalPermissionIds, ['has_access' => true]),
-      array_fill_keys($allowedPermissionIds, ['has_access' => true]),
-      array_fill_keys($deniedPermissionIds, ['has_access', false])
-    );
-
-    $this->permissions()->sync($permissionIds);
+      if ($this->permissions->where('id', $permission->id)->exists()) {
+        $this->permissions()->updateExistingPivot($permission->id, ['has_access' => $isAllowed]);
+      } else if ($isAllowed) {
+        $this->permissions->attach($permission, ['has_access' => true]);
+      }
+    }
   }
 }

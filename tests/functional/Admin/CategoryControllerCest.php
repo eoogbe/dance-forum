@@ -234,4 +234,50 @@ class CategoryControllerCest
     $I->click('last', 'section > ul > li:first-child');
     $I->see($category->name, 'section > ul > li:last-child');
   }
+
+  public function updateCategoryPermissions(FunctionalTester $I, \Page\Login $loginPage)
+  {
+    $I->am('Admin');
+    $I->wantTo('update the permissions assigned to a category');
+
+    $password = str_random(12);
+    $admin = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $adminRole = $I->grabRole();
+    $admin->roles()->attach($adminRole);
+    $loginPage->login($admin->email, $password);
+
+    $user = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $role = $I->createModel('App\Role');
+    $role->attachPermission('viewAdminPanel.board');
+    $user->roles()->attach($role);
+
+    $category = $I->createModel('App\Category');
+    $role->createPermission("delete.categories.{$category->id}");
+    $I->amOnRoute('admin.categories.editPermissions', compact('category'));
+
+    $I->submitForm('form', ['update_roles' => [$adminRole->id, $role->id], 'destroy_roles' => [$adminRole->id]]);
+
+    $I->amOnRoute('admin.categories.show', compact('category'));
+    $I->seeLink('edit');
+    $I->see('delete');
+
+    $I->click('logout');
+    $loginPage->login($user->email, $password);
+    $I->amOnRoute('admin.categories.show', compact('category'));
+    $I->seeLink('edit');
+    $I->dontSee('delete');
+  }
+
+  public function preventUpdateCategoryPermissionsWithoutAdmin(FunctionalTester $I)
+  {
+    $I->am('User');
+    $I->wantTo('be prevented from updating the permissions assigned to a category');
+
+    $user = $I->createModel('App\User');
+    $I->amLoggedAs($user);
+
+    $category = $I->createModel('App\Category');
+    $I->amOnRoute('admin.categories.editPermissions', compact('category'));
+    $I->see('Access denied');
+  }
 }

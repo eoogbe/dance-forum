@@ -35,6 +35,14 @@ Route::group([
     'as' => 'admin.categories.position',
     'uses' => 'CategoryController@position'
   ]);
+  Route::get('categories/{category}/permissions/edit', [
+    'as' => 'admin.categories.editPermissions',
+    'uses' => 'CategoryController@editPermissions'
+  ]);
+  Route::put('categories/{category}/permissions', [
+    'as' => 'admin.categories.updatePermissions',
+    'uses' => 'CategoryController@updatePermissions'
+  ]);
   Route::put('boards/{board}/position', [
     'as' => 'admin.boards.position',
     'uses' => 'BoardController@position'

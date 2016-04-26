@@ -15,6 +15,13 @@ Manage {{ $category->name }}
 
     <ul>
       <li><a href="{{ route('categories.show', compact('category')) }}">view on forum</a></li>
+      @can('updatePermissions', $category)
+        <li>
+          <a href="{{ route('admin.categories.editPermissions', compact('category')) }}">
+            manage permissions
+          </a>
+        </li>
+      @endcan
       @can('update', $category)
         <li><a href="{{ route('admin.categories.edit', compact('category')) }}">edit</a></li>
       @endcan

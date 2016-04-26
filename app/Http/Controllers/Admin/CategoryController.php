@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 
 use App\Category;
+use App\Role;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Controllers\Controller;
@@ -143,5 +144,55 @@ class CategoryController extends Controller
     $category->update(['position' => $swapPosition]);
 
     return redirect()->route('admin.categories.index');
+  }
+
+  /**
+   * Show the form for editing the permissions of the specified resource.
+   *
+   * @param  Category  $category
+   * @return \Illuminate\Http\Response
+   */
+  public function editPermissions(Category $category)
+  {
+    $this->authorize('updatePermissions', $category);
+
+    return view('admin.categories.editPermissions', [
+      'category' => $category,
+      'roles' => Role::orderBy('name')->get(),
+    ]);
+  }
+
+  /**
+   * Update the permissions of the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  Category  $category
+   * @return \Illuminate\Http\Response
+   */
+  public function updatePermissions(Request $request, Category $category)
+  {
+    $this->authorize($category);
+
+    $updateRoles = $request->update_roles ?: [];
+    $destroyRoles = $request->destroy_roles ?: [];
+
+    $updatePermissionName = "update.category.{$category->id}";
+    $destroyPermissionName = "delete.category.{$category->id}";
+
+    foreach (Role::all() as $role) {
+      if (in_array($role->id, $updateRoles)) {
+        $role->allow($updatePermissionName);
+      } else {
+        $role->deny($updatePermissionName);
+      }
+
+      if (in_array($role->id, $destroyRoles)) {
+        $role->allow($destroyPermissionName);
+      } else {
+        $role->deny($destroyPermissionName);
+      }
+    }
+
+    return redirect()->route('admin.categories.show', compact('category'));
   }
 }
