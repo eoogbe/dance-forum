@@ -17,12 +17,29 @@ Route::get('', 'CategoryController@index');
 
 Route::auth();
 
-Route::get('boards/{board}', ['as' => 'boards.show', 'uses' => 'BoardController@show']);
-Route::get('topics/{topic}', ['as' => 'topics.show', 'uses' => 'TopicController@show']);
+Route::get('profile/edit', [
+  'as' => 'account.editProfile',
+  'uses' => 'AccountController@editProfile',
+]);
+Route::put('profile', [
+  'as' => 'account.updateProfile',
+  'uses' => 'AccountController@updateProfile',
+]);
+Route::get('account/edit', [
+  'as' => 'account.editSettings',
+  'uses' => 'AccountController@editSettings',
+]);
+Route::put('account', [
+  'as' => 'account.updateSettings',
+  'uses' => 'AccountController@updateSettings',
+]);
 Route::post('posts/{id}/restore', ['as' => 'posts.restore', 'uses' => 'PostController@restore']);
 
+Route::resource('users', 'UserController', ['only' => 'show']);
 Route::resource('categories', 'CategoryController', ['only' => ['index', 'show']]);
+Route::resource('boards', 'BoardController', ['only' => 'show']);
 Route::resource('boards.topics', 'TopicController', ['only' => ['create', 'store']]);
+Route::resource('topics', 'TopicController', ['only' => 'show']);
 Route::resource('topics.posts', 'PostController', ['only' => ['create', 'store']]);
 Route::resource('posts', 'PostController', ['only' => ['edit', 'update', 'destroy']]);
 

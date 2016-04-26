@@ -1,19 +1,37 @@
 @extends('layouts.app')
 
 @section('title')
-Register
+Edit Account Settings
 @endsection
 
 @section('content')
 <section>
-  <h2>Register</h2>
+  <h2>Edit Account Settings</h2>
 
-  <form method="post" action="{{ url('/register') }}">
+  <form method="post" action="{{ route('account.updateSettings') }}">
+    {!! method_field('PUT') !!}
     {!! csrf_field() !!}
 
     @include('common.errors')
 
     <ul>
+      <li>
+        <label for="current-password">Current Password</label>
+
+        <input
+            type="password"
+            name="current_password"
+            id="current-password"
+            placeholder="We need your current password to confirm your changes"
+            aria-invalid="{{ var_export($errors->has('current_password'), true) }}"
+            required
+        >
+
+        @if ($errors->has('current_password'))
+          <p role="alert">{{ $errors->first('current_password') }}</p>
+        @endif
+      </li>
+
       <li>
         <label for="username">Username</label>
 
@@ -22,10 +40,10 @@ Register
             name="username"
             id="username"
             value="{{ old('username') }}"
+            placeholder="Leave blank if keep the same"
             aria-invalid="{{ var_export($errors->has('username'), true) }}"
             maxlength="255"
             autofocus
-            required
         >
 
         @if ($errors->has('username'))
@@ -41,9 +59,9 @@ Register
             name="email"
             id="email"
             value="{{ old('email') }}"
+            placeholder="Leave blank if keep the same"
             aria-invalid="{{ var_export($errors->has('email'), true) }}"
             maxlength="255"
-            required
         >
 
         @if ($errors->has('email'))
@@ -58,10 +76,9 @@ Register
             type="password"
             name="password"
             id="password"
-            placeholder="at least 12 characters"
+            placeholder="Leave blank if keep the same"
             aria-invalid="{{ var_export($errors->has('password'), true) }}"
             minlength="12"
-            required
         >
 
         @if ($errors->has('password'))
@@ -77,7 +94,6 @@ Register
             name="password_confirmation"
             id="password-confirmation"
             aria-invalid="{{ var_export($errors->has('password_confirmation'), true) }}"
-            required
         >
 
         @if ($errors->has('password_confirmation'))
@@ -86,7 +102,7 @@ Register
       </li>
     </ul>
 
-    <button type="submit">Register</button>
+    <button type="submit">Update Settings</button>
   </form>
 </section>
 @endsection

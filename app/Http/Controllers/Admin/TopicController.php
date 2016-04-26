@@ -44,9 +44,7 @@ class TopicController extends Controller
    */
   public function update(UpdateTopicRequest $request, Topic $topic)
   {
-    $topic->update([
-      'name' => $request->name
-    ]);
+    $topic->update($request->only('name'));
 
     return redirect()->route('topics.show', compact('topic'));
   }

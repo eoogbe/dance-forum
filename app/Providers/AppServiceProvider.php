@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Auth;
 use Blade;
+use Validator;
 use Illuminate\Support\ServiceProvider;
 
 use App\Post;
@@ -18,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
   {
     Blade::directive('role', function($expression) {
       return "<?php if (Auth::check() && Auth::user()->hasRole{$expression}): ?>";
+    });
+
+    Validator::extend('password', function($attribute, $value, $parameters, $validator) {
+      return Auth::validate(['email' => Auth::user()->email, 'password' => $value]);
     });
 
     Post::created(function ($post) {

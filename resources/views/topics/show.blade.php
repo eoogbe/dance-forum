@@ -89,7 +89,19 @@
       <li id="post-{{ $post->id }}">
         <article>
           <footer>
-            <p><cite>{{ $post->authorName() }}</cite></p>
+            <p>
+              <cite>
+                <a href="{{ route('users.show', ['user' => $post->author]) }}">
+                  {{ $post->authorName() }}
+                </a>
+              </cite>
+            </p>
+            @if ($post->author->pronouns)
+              <p>{{ $post->author->pronouns }} pronouns</p>
+            @endif
+            @if ($post->author->description)
+              <div>{!! Purifier::clean($post->author->description) !!}</div>
+            @endif
             <p>@include('posts.link')</p>
             @unless ($post->trashed())
               @if ($post->isUpdated())

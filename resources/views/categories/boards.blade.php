@@ -7,7 +7,12 @@
         <p>
           Last post
           @include('posts.link', ['post' => $board->lastPost()])
-          by <cite>{{ $board->lastPost()->authorName() }}</cite>
+          by
+          <cite>
+            <a href="{{ route('users.show', ['user' => $board->lastPost()->author]) }}">
+              {{ $board->lastPost()->authorName() }}
+            </a>
+          </cite>
           in @include('topics.link', ['topic' => $board->lastPost()->topic])
         </p>
       @endif

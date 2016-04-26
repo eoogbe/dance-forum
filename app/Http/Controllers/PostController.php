@@ -81,9 +81,7 @@ class PostController extends Controller
    */
   public function update(PostRequest $request, Post $post)
   {
-    $post->update([
-      'content' => $request->content,
-    ]);
+    $post->update($request->only('content'));
 
     return redirect(Pagination::getPostUrl($post));
   }
@@ -113,7 +111,7 @@ class PostController extends Controller
   {
     $post = Post::withTrashed()->findOrFail($id);
     $this->authorize($post);
-    
+
     $post->restore();
 
     return redirect(Pagination::getPostUrl($post));

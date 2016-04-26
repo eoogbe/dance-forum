@@ -146,7 +146,7 @@ class PostControllerCest
     $I->see($post->content);
   }
 
-  public function preventDestroyPostWithoutAdmin(FunctionalTester $I)
+  public function preventRestorePostWithoutAdmin(FunctionalTester $I)
   {
     $I->am('User');
     $I->wantTo('be prevented from restoring a post');

@@ -34,6 +34,7 @@
         <li>
           <button type="button">{{ Auth::user()->name }}</button>
           <ul>
+            <li><a href="{{ route('users.show', ['user' => Auth::user()]) }}">profile</a></li>
             <li><a href="{{ url('/logout') }}">logout</a></li>
           </ul>
         </li>

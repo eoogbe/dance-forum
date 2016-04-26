@@ -36,12 +36,24 @@
             <p><a href="{{ Pagination::getPostUrl($topic->firstNewPost(Auth::user())) }}">new</a></p>
           @endif
           <p>@include('topics.link')</p>
-          <p>created by <cite>{{ $topic->authorName() }}</cite></p>
+          <p>
+            created by
+            <cite>
+              <a href="{{ route('users.show', ['user' => $topic->author()]) }}">
+                {{ $topic->author()->name }}
+              </a>
+            </cite>
+          </p>
           @if ($topic->lastPost())
             <p>
               Last post
               @include('posts.link', ['post' => $topic->lastPost()])
-              by <cite>{{ $topic->lastPost()->authorName() }}</cite>
+              by
+              <cite>
+                <a href="{{ route('users.show', ['user' => $topic->lastPost()->author]) }}">
+                  {{ $topic->lastPost()->authorName() }}
+                </a>
+              </cite>
             </p>
           @endif
           <p>{{ $topic->postCount() }} {{ str_plural('post', $topic->postCount()) }}</p>

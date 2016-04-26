@@ -75,9 +75,7 @@ class RoleController extends Controller
    */
   public function store(StoreRoleRequest $request)
   {
-    $role = Role::create([
-      'name' => $request->name,
-    ]);
+    $role = Role::create($request->only('name'));
 
     if ($request->permission_ids) {
       $permissionIds = array_fill_keys($request->permission_ids, ['has_access' => true]);
@@ -112,9 +110,7 @@ class RoleController extends Controller
    */
   public function update(UpdateRoleRequest $request, Role $role)
   {
-    $role->update([
-      'name' => $request->name,
-    ]);
+    $role->update($request->only('name'));
     $role->setGeneralPermissions($request->permission_ids ?: []);
 
     return redirect()->route('admin.roles.show', compact('role'));

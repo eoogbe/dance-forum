@@ -23,6 +23,10 @@ Manage {{ $user->name }}
   @endif
   <p>{{ $user->postCount() }} {{ str_plural('post', $user->postCount()) }}</p>
 
+  <ul>
+    <li><a href="{{ route('users.show', compact('user')) }}">view profile</a></li>
+  </ul>
+
   <section>
     <h3>User Permissions</h3>
     @if ($permissions->exists())

@@ -8,9 +8,13 @@ A example forum so I can learn [Laravel](http://laravel.com).
 
 - Admin panel
 - WYSIWYG for formatted text
+- pagination
+- Users
+  - assign roles (admin)
+  - edit settings and profile
 - User roles
   - CRUD operations (admin)
-  - assign (admin)
+  - assign users (admin)
 - Categories
   - CRUD operations (admin)
   - order (admin)
@@ -24,7 +28,6 @@ A example forum so I can learn [Laravel](http://laravel.com).
   - create
   - edit (admin)
   - delete (admin)
-  - pagination
   - user view count
   - pin (admin)
   - lock (admin)
@@ -35,13 +38,10 @@ A example forum so I can learn [Laravel](http://laravel.com).
   - edit (author or admin)
   - soft delete (author or admin)
   - restore deleted posts (admin)
-  - pagination
 
 ## TODO
 
-- moderators
 - undo/redo delete
-- user profiles
 - subscriptions
 - remove account
 - approval

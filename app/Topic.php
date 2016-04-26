@@ -87,11 +87,11 @@ class Topic extends Model
   }
 
   /**
-   * Get the name of the user who created the topic.
+   * Get the user who created the topic.
    */
-  public function authorName()
+  public function author()
   {
-    return $this->firstPost()->authorName();
+    return $this->firstPost()->author;
   }
 
   /**

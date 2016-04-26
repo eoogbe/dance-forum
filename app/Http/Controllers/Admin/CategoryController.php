@@ -101,9 +101,7 @@ class CategoryController extends Controller
    */
   public function update(UpdateCategoryRequest $request, Category $category)
   {
-    $category->update([
-      'name' => $request->name,
-    ]);
+    $category->update($request->only('name'));
 
     return redirect()->route('admin.categories.show', compact('category'));
   }
