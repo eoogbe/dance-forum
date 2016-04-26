@@ -125,4 +125,54 @@ class TopicController extends Controller
 
     return redirect()->route('boards.show', ['board' => $topic->board]);
   }
+
+  /**
+   * Show the form for editing the permissions of the specified resource.
+   *
+   * @param  Topic  $topic
+   * @return \Illuminate\Http\Response
+   */
+  public function editPermissions(Topic $topic)
+  {
+    $this->authorize('updatePermissions', $topic);
+
+    return view('admin.topics.editPermissions', [
+      'topic' => $topic,
+      'roles' => Role::orderBy('name')->get(),
+    ]);
+  }
+
+  /**
+   * Update the permissions of the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  Topic  $topic
+   * @return \Illuminate\Http\Response
+   */
+  public function updatePermissions(Request $request, Topic $topic)
+  {
+    $this->authorize($topic);
+
+    $updateRoles = $request->update_roles ?: [];
+    $destroyRoles = $request->destroy_roles ?: [];
+
+    $updatePermissionName = "update.topic.{$topic->id}";
+    $destroyPermissionName = "delete.topic.{$topic->id}";
+
+    foreach (Role::all() as $role) {
+      if (in_array($role->id, $updateRoles)) {
+        $role->allow($updatePermissionName);
+      } else {
+        $role->deny($updatePermissionName);
+      }
+
+      if (in_array($role->id, $destroyRoles)) {
+        $role->allow($destroyPermissionName);
+      } else {
+        $role->deny($destroyPermissionName);
+      }
+    }
+
+    return redirect()->route('topics.show', compact('topic'));
+  }
 }

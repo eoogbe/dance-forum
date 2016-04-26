@@ -32,7 +32,7 @@
                 name="permission_ids[]"
                 id="permission-{{ $permission->id }}"
                 value="{{ $permission->id }}"
-                @if (in_array($permission->id, old('permission_ids[]', $role->allowedPermissions()->getRelatedIds()->toArray())))
+                @if (in_array($permission->id, old('permission_ids[]', $role->isAllowedTo($permission->name) ? [$permission->id] : [])))
                   checked
                 @endif
             >

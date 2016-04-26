@@ -20,7 +20,9 @@ class TopicPolicy
    */
   public function update(User $user, Topic $topic)
   {
-    return $user->isAllowedTo("update.topic.{$topic->id}");
+    return $user->isAllowedTo("update.category.{$topic->board->category_id}") ||
+      $user->isAllowedTo("update.board.{$topic->board_id}") ||
+      $user->isAllowedTo("update.topic.{$topic->id}");
   }
 
   /**
@@ -32,7 +34,9 @@ class TopicPolicy
    */
   public function destroy(User $user, Topic $topic)
   {
-    return $user->isAllowedTo("delete.topic.{$topic->id}");
+    return $user->isAllowedTo("delete.category.{$topic->board->category_id}") ||
+      $user->isAllowedTo("delete.board.{$topic->board_id}") ||
+      $user->isAllowedTo("delete.topic.{$topic->id}");
   }
 
   /**
@@ -56,7 +60,7 @@ class TopicPolicy
    */
   public function lock(User $user, Topic $topic)
   {
-    return $user->isAllowedTo("lock.topic.{$topic->id}");
+    return $this->update($user, $topic);
   }
 
   /**
@@ -68,6 +72,18 @@ class TopicPolicy
    */
   public function pin(User $user, Topic $topic)
   {
-    return $user->isAllowedTo("pin.topic.{$topic->id}");
+    return $this->update($user, $topic);
+  }
+
+  /**
+   * Determine if the given user can update permissions for the given topic.
+   *
+   * @param  User  $user
+   * @param  Topic  $topic
+   * @return bool
+   */
+  public function updatePermissions(User $user, Topic $topic)
+  {
+    return $user->isAllowedTo('update.permission');
   }
 }

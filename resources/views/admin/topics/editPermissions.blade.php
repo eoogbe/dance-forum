@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-Edit Permissions for {{ $board->name }}
+Edit Permissions for {{ $topic->name }}
 @endsection
 
 @section('sidebar')
@@ -10,9 +10,9 @@ Edit Permissions for {{ $board->name }}
 
 @section('content')
 <section>
-  <h2>Edit Permissions for {{ $board->name }}</h2>
+  <h2>Edit Permissions for {{ $topic->name }}</h2>
 
-  <form method="post" action="{{ route('admin.boards.updatePermissions', compact('board')) }}">
+  <form method="post" action="{{ route('admin.topics.updatePermissions', compact('topic')) }}">
     {!! method_field('PUT') !!}
     {!! csrf_field() !!}
 
@@ -34,7 +34,7 @@ Edit Permissions for {{ $board->name }}
                   type="checkbox"
                   name="update_roles[]"
                   value="{{ $role->id }}"
-                  @if (in_array($role->id, old('update_roles[]', $role->isAllowedTo('update.board.'.$board->id) ? [$role->id] : [])))
+                  @if (in_array($role->id, old('update_roles[]', $role->isAllowedTo('update.topic.'.$topic->id) ? [$role->id] : [])))
                     checked
                   @endif
               >
@@ -44,7 +44,7 @@ Edit Permissions for {{ $board->name }}
                   type="checkbox"
                   name="destroy_roles[]"
                   value="{{ $role->id }}"
-                  @if (in_array($role->id, old('destroy_roles[]', $role->isAllowedTo('delete.board.'.$board->id) ? [$role->id] : [])))
+                  @if (in_array($role->id, old('destroy_roles[]', $role->isAllowedTo('delete.topic.'.$topic->id) ? [$role->id] : [])))
                     checked
                   @endif
               >

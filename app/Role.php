@@ -68,12 +68,10 @@ class Role extends Model
   public function setGeneralPermissions($permissionIds)
   {
     foreach (Permission::maxDepth(1) as $permission) {
-      $isAllowed = in_array($permission->id, $permissionIds);
-
-      if ($this->permissions->where('id', $permission->id)->exists()) {
-        $this->permissions()->updateExistingPivot($permission->id, ['has_access' => $isAllowed]);
-      } else if ($isAllowed) {
-        $this->permissions->attach($permission, ['has_access' => true]);
+      if (in_array($permission->id, $permissionIds)) {
+        $this->alllow($permission->name);
+      } else if ($this->permissions->where('id', $permission->id)->exists()) {
+        $this->deny($permission->name);
       }
     }
   }

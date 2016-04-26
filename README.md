@@ -14,6 +14,7 @@ A example forum so I can learn [Laravel](http://laravel.com).
 - Categories
   - CRUD operations (admin)
   - order (admin)
+  - permissions (admin)
 - Boards
   - CRUD operations (admin)
   - order (admin)
@@ -27,6 +28,7 @@ A example forum so I can learn [Laravel](http://laravel.com).
   - user view count
   - pin (admin)
   - lock (admin)
+  - permissions (admin)
 - Posts
   - create
   - edit (author or admin)

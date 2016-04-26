@@ -20,7 +20,7 @@ class PermissionsTableSeeder extends Seeder
       'update.permissions',
       'create.category', 'update.category', 'delete.category',
       'viewAdminPanel.board', 'create.board', 'update.board', 'delete.board',
-      'update.topic', 'delete.topic', 'lock.topic', 'pin.topic',
+      'update.topic', 'delete.topic',
       'update.post', 'delete.post', 'restore.post',
     ];
 

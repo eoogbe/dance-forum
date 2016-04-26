@@ -18,7 +18,13 @@
           <a href="{{ route('topics.posts.create', compact('topic')) }}">reply</a>
         @endcan
       </li>
-
+      @can('updatePermissions', $topic)
+        <li>
+          <a href="{{ route('admin.topics.editPermissions', compact('topic')) }}">
+            manage permissions
+          </a>
+        </li>
+      @endcan
       @can('update', $topic)
         <li><a href="{{ route('admin.topics.edit', compact('topic')) }}">edit</a></li>
       @endcan

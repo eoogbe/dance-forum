@@ -22,11 +22,12 @@ Edit Permissions for {{ $category->name }}
           <th scope="col">Role</th>
           <th scope="col">Update</th>
           <th scope="col">Delete</th>
+          <th scope="col">All</th>
         </tr>
       </thead>
       <tbody>
         @foreach ($roles as $role)
-          <tr>
+          <tr class="permission-row">
             <th scope="row">{{ $role->name }}</th>
             <td>
               <input
@@ -48,6 +49,7 @@ Edit Permissions for {{ $category->name }}
                   @endif
               >
             </td>
+            <td><input type="checkbox" class="all-permissions"></td>
           </tr>
         @endforeach
       </tbody>

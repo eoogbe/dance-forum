@@ -21,6 +21,7 @@ class TopicControllerCest
     $I->dontSee('delete', 'header');
     $I->dontSee('pin', 'header');
     $I->dontSee('lock', 'header');
+    $I->dontSee('manage permissions', 'header');
   }
 
   public function updateTopic(FunctionalTester $I)
@@ -150,5 +151,50 @@ class TopicControllerCest
     $I->amLoggedAs($topic->firstPost()->author);
     $I->see('edit', 'section > ol > li');
     $I->see('delete', 'section > ol > li');
+  }
+
+  public function updateTopicPermissions(FunctionalTester $I, \Page\Login $loginPage)
+  {
+    $I->am('Admin');
+    $I->wantTo('update the permissions assigned to a topic');
+
+    $password = str_random(12);
+    $admin = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $adminRole = $I->grabRole();
+    $admin->roles()->attach($adminRole);
+    $loginPage->login($admin->email, $password);
+
+    $user = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $role = $I->createModel('App\Role');
+    $user->roles()->attach($role);
+
+    $topic = $I->createModel('App\Topic');
+    $role->createPermission("delete.topic.{$topic->id}");
+    $I->amOnRoute('admin.topics.editPermissions', compact('topic'));
+
+    $I->submitForm('form', ['update_roles' => [$adminRole->id, $role->id], 'destroy_roles' => [$adminRole->id]]);
+
+    $I->amOnRoute('topics.show', compact('topic'));
+    $I->seeLink('edit');
+    $I->see('delete');
+
+    $I->click('logout');
+    $loginPage->login($user->email, $password);
+    $I->amOnRoute('topics.show', compact('topic'));
+    $I->seeLink('edit');
+    $I->dontSee('delete');
+  }
+
+  public function preventUpdateTopicPermissionsWithoutAdmin(FunctionalTester $I)
+  {
+    $I->am('User');
+    $I->wantTo('be prevented from updating the permissions assigned to a topic');
+
+    $user = $I->createModel('App\User');
+    $I->amLoggedAs($user);
+
+    $topic = $I->createModel('App\Topic');
+    $I->amOnRoute('admin.topics.editPermissions', compact('topic'));
+    $I->see('Access denied');
   }
 }

@@ -71,6 +71,14 @@ Route::group([
     'as' => 'admin.topics.unlock',
     'uses' => 'TopicController@unlock'
   ]);
+  Route::get('topics/{topic}/permissions/edit', [
+    'as' => 'admin.topics.editPermissions',
+    'uses' => 'TopicController@editPermissions'
+  ]);
+  Route::put('topics/{topic}/permissions', [
+    'as' => 'admin.topics.updatePermissions',
+    'uses' => 'TopicController@updatePermissions'
+  ]);
   Route::get('users/{user}/roles/edit', [
     'as' => 'admin.users.editRoles',
     'uses' => 'UserController@editRoles'
