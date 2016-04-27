@@ -255,7 +255,10 @@ class CategoryControllerCest
     $role->createPermission("delete.categories.{$category->id}");
     $I->amOnRoute('admin.categories.editPermissions', compact('category'));
 
-    $I->submitForm('form', ['update_roles' => [$adminRole->id, $role->id], 'destroy_roles' => [$adminRole->id]]);
+    $I->submitForm('section > form', [
+      'update_roles' => [$adminRole->id, $role->id],
+      'destroy_roles' => [$adminRole->id]
+    ]);
 
     $I->amOnRoute('admin.categories.show', compact('category'));
     $I->seeLink('edit');

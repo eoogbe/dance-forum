@@ -38,9 +38,6 @@ Edit Post
     <button type="submit">Update Post</button>
   </form>
 
-  <p>
-    Back to
-    <a href="{{ route('topics.show', ['topic' => $post->topic]).'#post-'.$post->id }}">post</a>
-  </p>
+  <p>Back to <a href="{{ Pagination::getPostUrl($post) }}">post</a></p>
 </section>
 @endsection

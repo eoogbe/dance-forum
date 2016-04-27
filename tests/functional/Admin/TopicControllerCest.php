@@ -211,7 +211,10 @@ class TopicControllerCest
     $role->createPermission("delete.topic.{$topic->id}");
     $I->amOnRoute('admin.topics.editPermissions', compact('topic'));
 
-    $I->submitForm('form', ['update_roles' => [$adminRole->id, $role->id], 'destroy_roles' => [$adminRole->id]]);
+    $I->submitForm('section > form', [
+      'update_roles' => [$adminRole->id, $role->id],
+      'destroy_roles' => [$adminRole->id]
+    ]);
 
     $I->amOnRoute('topics.show', compact('topic'));
     $I->seeLink('edit');

@@ -16,5 +16,7 @@ Edit {{ $category->name }}
     {!! method_field('PUT') !!}
     @include('admin.categories.form')
   </form>
+
+  <p>Back to <a href="{{ route('admin.categories.show', compact('category')) }}">category</a></p>
 </section>
 @endsection

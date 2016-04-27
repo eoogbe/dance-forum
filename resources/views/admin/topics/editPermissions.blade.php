@@ -57,5 +57,7 @@ Edit Permissions for {{ $topic->name }}
 
     <button type="submit">Update Permissions</button>
   </form>
+
+  <p>Back to <a href="{{ route('topics.show', compact('topic')) }}">topic</a></p>
 </section>
 @endsection

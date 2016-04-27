@@ -73,4 +73,37 @@ class Post extends Model
       ->where('created_at', '<=', $this->created_at)
       ->count();
    }
+
+   /**
+    * Get an excerpt of the content with a 100 character radius of the given phrase.
+    */
+   public function excerpt($phrase)
+   {
+     $radius = 100;
+
+     $phraseLength = strlen($phrase);
+
+     if ($phraseLength >= $radius) {
+       return str_limit($phrase, $radius * 2);
+     }
+
+     $contentParts = explode($phrase, $this->content, 2);
+
+     if (!isset($contentParts[1])) {
+       return str_limit($this->content, $radius * 2);
+     }
+
+     $partLength = $radius - floor($phraseLength / 2);
+
+     $prefixStart = max(strlen($contentParts[0]) - $partLength, 0);
+     $prefix = substr($contentParts[0], $prefixStart);
+
+     if ($prefixStart > 0) {
+       $prefix = "...$prefix";
+     }
+
+     $suffix = substr($contentParts[1], 0, $partLength);
+
+     return str_limit("$prefix$phrase$suffix", $radius * 2);
+   }
 }

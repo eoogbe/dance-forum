@@ -17,6 +17,10 @@ Route::get('', 'CategoryController@index');
 
 Route::auth();
 
+Route::get('search', [
+  'as' => 'forum.search',
+  'uses' => 'ForumController@search',
+]);
 Route::get('profile/edit', [
   'as' => 'account.editProfile',
   'uses' => 'AccountController@editProfile',

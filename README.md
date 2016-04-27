@@ -9,6 +9,7 @@ A example forum so I can learn [Laravel](http://laravel.com).
 - Admin panel
 - WYSIWYG for formatted text
 - pagination
+- site search
 - Users
   - assign roles (admin)
   - edit settings and profile
@@ -48,5 +49,4 @@ A example forum so I can learn [Laravel](http://laravel.com).
 - private messages
 - report spam
 - ban users
-- search
 - CSS

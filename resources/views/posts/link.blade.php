@@ -1,3 +1,3 @@
-<a href="{{ route('topics.show', ['topic' => $post->topic]).'#post-'.$post->id }}">
+<a href="{{ Pagination::getPostUrl($post) }}">
   @include('common.time', ['datetime' => $post->created_at])
 </a>

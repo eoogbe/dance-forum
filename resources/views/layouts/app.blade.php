@@ -27,6 +27,15 @@
       </ul>
     @endcan
 
+    <form method="get" action="{{ route('forum.search') }}" role="search">
+      <ul>
+        <li>
+          <input type="search" name="term" placeholder="Search">
+        </li>
+      </ul>
+      <button type="submit">Search</button>
+    </form>
+
     <ul>
       @if (Auth::guest())
         <li><a href="{{ url('/login') }}">login</a></li>

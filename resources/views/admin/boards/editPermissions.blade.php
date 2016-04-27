@@ -57,5 +57,7 @@ Edit Permissions for {{ $board->name }}
 
     <button type="submit">Update Permissions</button>
   </form>
+
+  <p>Back to <a href="{{ route('admin.boards.show', compact('board')) }}">board</a></p>
 </section>
 @endsection

@@ -298,7 +298,10 @@ class BoardControllerCest
     $role->createPermission("delete.board.{$board->id}");
     $I->amOnRoute('admin.boards.editPermissions', compact('board'));
 
-    $I->submitForm('form', ['update_roles' => [$adminRole->id, $role->id], 'destroy_roles' => [$adminRole->id]]);
+    $I->submitForm('section > form', [
+      'update_roles' => [$adminRole->id, $role->id],
+      'destroy_roles' => [$adminRole->id]
+    ]);
 
     $I->amOnRoute('admin.boards.show', compact('board'));
     $I->seeLink('edit');

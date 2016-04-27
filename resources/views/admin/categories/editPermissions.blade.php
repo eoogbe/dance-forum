@@ -57,5 +57,7 @@ Edit Permissions for {{ $category->name }}
 
     <button type="submit">Update Permissions</button>
   </form>
+
+  <p>Back to <a href="{{ route('admin.categories.show', compact('category')) }}">category</a></p>
 </section>
 @endsection

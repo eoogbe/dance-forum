@@ -16,5 +16,7 @@ Edit {{ $role->name }}
     {!! method_field('PUT') !!}
     @include('admin.roles.form')
   </form>
+
+  <p>Back to <a href="{{ route('admin.roles.show', compact('role')) }}">role</a></p>
 </section>
 @endsection

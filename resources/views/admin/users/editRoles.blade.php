@@ -35,5 +35,7 @@ Edit Roles for {{ $user->name }}
 
     <button type="submit">Update Roles</button>
   </form>
+
+  <p>Back to <a href="{{ route('admin.users.show', compact('user')) }}">user</a></p>
 </section>
 @endsection

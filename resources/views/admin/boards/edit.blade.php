@@ -16,5 +16,7 @@ Edit {{ $board->name }}
     {!! method_field('PUT') !!}
     @include('admin.boards.form')
   </form>
+
+  <p>Back to <a href="{{ route('admin.boards.show', compact('board')) }}">board</a></p>
 </section>
 @endsection
