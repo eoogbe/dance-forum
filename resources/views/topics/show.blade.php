@@ -35,6 +35,21 @@
           ])
         </li>
       @endcan
+      @if (Auth::check())
+        @if (Auth::user()->isSubscribedTo($topic))
+          <p>
+            <a href="{{ route('topics.subscriptions.destroy', compact('topic')) }}">
+              Unsubscribe
+            </a>
+          </p>
+        @else
+          <p>
+            <a href="{{ route('topics.subscriptions.store', compact('topic')) }}">
+              Subscribe
+            </a>
+          </p>
+        @endif
+      @endif
       @can('lock', $topic)
         <li>
           @if ($topic->isLocked())

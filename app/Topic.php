@@ -39,6 +39,14 @@ class Topic extends Model
   }
 
   /**
+   * Get all the subscriptions for the topic.
+   */
+  public function subscriptions()
+  {
+    return $this->hasMany(Subscription::class);
+  }
+
+  /**
    * Get the board for the topic.
    */
   public function board()

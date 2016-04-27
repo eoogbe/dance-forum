@@ -40,7 +40,7 @@ New Topic
       <li>
         <label>First Post</label>
 
-        <input type="hidden" name="post_content" value="" class="editor-text">
+        <input type="hidden" name="post_content" value="" data-editor-text>
 
         <div class="editor">{{ old('post_content') }}</div>
 

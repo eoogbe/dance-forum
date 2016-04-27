@@ -11,6 +11,7 @@
     @can ('update', $user)
       <ul>
         <li><a href="{{ route('account.editProfile') }}">edit profile</a></li>
+        <li><a href="{{ route('subscriptions.edit') }}">edit subscriptions</a></li>
         <li><a href="{{ route('account.editSettings') }}">edit account settings</a></li>
       </ul>
     @endcan
@@ -33,5 +34,20 @@
     <p>Last active @include('common.time', ['datetime' => $user->login_at])</p>
   @endif
   <p>{{ $user->postCount() }} {{ str_plural('post', $user->postCount()) }}</p>
+
+  <section>
+    <h3>Subscriptions</h3>
+    @if ($user->subscriptions()->exists())
+      <ul>
+        @foreach ($user->subscriptions as $subscription)
+          <li>
+            @include('topics.link', ['topic' => $subscription->topic])
+          </li>
+        @endforeach
+      </ul>
+    @else
+      <p>None</p>
+    @endif
+  </section>
 </section>
 @endsection

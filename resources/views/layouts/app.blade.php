@@ -12,6 +12,7 @@
     @endif
   </title>
 
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
   <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
   <script src="{{ asset('js/app.js') }}"></script>
 </head>

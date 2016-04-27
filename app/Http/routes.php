@@ -37,7 +37,26 @@ Route::delete('account', [
   'as' => 'account.destroy',
   'uses' => 'AccountController@destroy',
 ]);
-Route::post('posts/{id}/restore', ['as' => 'posts.restore', 'uses' => 'PostController@restore']);
+Route::post('posts/{id}/restore', [
+  'as' => 'posts.restore',
+  'uses' => 'PostController@restore',
+]);
+Route::get('topics/{topic}/subscriptions/store', [
+  'as' => 'topics.subscriptions.store',
+  'uses' => 'SubscriptionController@store',
+]);
+Route::get('topics/{topic}/subscriptions/destroy', [
+  'as' => 'topics.subscriptions.destroy',
+  'uses' => 'SubscriptionController@destroy',
+]);
+Route::get('subscriptions/edit', [
+  'as' => 'subscriptions.edit',
+  'uses' => 'SubscriptionController@edit',
+]);
+Route::put('subscriptions', [
+  'as' => 'subscriptions.update',
+  'uses' => 'SubscriptionController@update',
+]);
 
 Route::resource('users', 'UserController', ['only' => 'show']);
 Route::resource('categories', 'CategoryController', ['only' => ['index', 'show']]);

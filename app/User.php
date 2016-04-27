@@ -52,6 +52,14 @@ class User extends Authenticatable
   }
 
   /**
+   * Get all the subscriptions for the user.
+   */
+  public function subscriptions()
+  {
+    return $this->hasMany(Subscription::class);
+  }
+
+  /**
   * Get all the roles for the user.
   */
   public function roles()
@@ -94,5 +102,21 @@ class User extends Authenticatable
     }
 
     return false;
+  }
+
+  /**
+   * Create a subscription for the user to the given topic if not already exists.
+   */
+  public function subscribeTo($topic)
+  {
+    $this->subscriptions()->firstOrCreate(['topic_id' => $topic->id]);
+  }
+
+  /**
+   * Checks if the user is subscribed to the given topic.
+   */
+  public function isSubscribedTo($topic)
+  {
+    return $this->subscriptions()->where('topic_id', $topic->id)->exists();
   }
 }

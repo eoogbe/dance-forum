@@ -24,7 +24,7 @@
   <li>
     <label>Description</label>
 
-    <input type="hidden" name="description" value="" class="editor-text">
+    <input type="hidden" name="description" value="" data-editor-text>
 
     <div class="editor">{!! Purifier::clean(old('description', $board->description)) !!}</div>
 

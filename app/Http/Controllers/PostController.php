@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
 use Pagination;
 use Illuminate\Http\Request;
 
@@ -50,11 +51,24 @@ class PostController extends Controller
    */
   public function store(PostRequest $request, Topic $topic)
   {
-    $post = $request->user()->posts()->create([
+    $user = $request->user();
+
+    $post = $user->posts()->create([
       'topic_id' => $topic->id,
       'content' => $request->content,
       'parent_id' => $request->parent_id,
     ]);
+
+    foreach ($post->topic->subscriptions as $subscription) {
+      if ($user->id !== $subscription->user_id) {
+        Mail::send('emails.topic_reply', compact('post'), function ($message) use ($subscription) {
+          $message->to($subscription->user->email);
+          $message->subject('A topic you have subscribed to has received a reply');
+        });
+      }
+    }
+
+    $user->subscribeTo($topic);
 
     return redirect(Pagination::getPostUrl($post));
   }

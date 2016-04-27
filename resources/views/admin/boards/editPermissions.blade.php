@@ -27,7 +27,7 @@ Edit Permissions for {{ $board->name }}
       </thead>
       <tbody>
         @foreach ($roles as $role)
-          <tr class="permission-row">
+          <tr data-permission-row>
             <th scope="row">{{ $role->name }}</th>
             <td>
               <input
@@ -49,7 +49,7 @@ Edit Permissions for {{ $board->name }}
                   @endif
               >
             </td>
-            <td><input type="checkbox" class="all-permissions"></td>
+            <td><input type="checkbox" data-all-permissions></td>
           </tr>
         @endforeach
       </tbody>

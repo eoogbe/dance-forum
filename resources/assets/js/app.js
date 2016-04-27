@@ -1,22 +1,9 @@
-var setRowChecked = function (permissionRow, input) {
-  var rowInputs = permissionRow.querySelectorAll('input[type="checkbox"]');
-  var allChecked = true;
+var setAllInputForRow = function ($row) {
+  var $allInput = $row.find('[data-all-permissions]');
+  var $inputs = $row.find('input').not($allInput);
+  var allChecked = $inputs.length === $inputs.filter(':checked').length;
 
-  if (input.className === 'all-permissions') {
-    for (var i = 0; i < rowInputs.length; ++i) {
-      if (rowInputs[i].className !== 'all-permissions') {
-        rowInputs[i].checked = input.checked;
-      }
-    }
-  } else {
-    for (var i = 0; i < rowInputs.length; ++i) {
-      if (rowInputs[i].className !== 'all-permissions') {
-        allChecked = allChecked && input.checked;
-      }
-    }
-
-    permissionRow.querySelector('.all-permissions').checked = allChecked;
-  }
+  $allInput.prop('checked', allChecked);
 };
 
 tinymce.init({
@@ -30,15 +17,24 @@ tinymce.init({
       editor.selection.collapse(false);
     });
     editor.on('submit', function () {
-      document.querySelector('.editor-text').value = editor.getContent();
+      $('[data-editor-text]').value = editor.getContent();
     })
   }
 });
 
-document.addEventListener('change', function(e) {
-  var permissionRow = e.target.parentNode.parentNode;
+$(document).on('change', '[data-permission-row] input:not([data-all-permissions])', function () {
+  setAllInputForRow($(this).closest('[data-permission-row]'));
+});
 
-  if (permissionRow.className === 'permission-row') {
-    setRowChecked(permissionRow, e.target);
-  }
-}, true);
+$(document).on('change', '[data-all-permissions]', function () {
+  $(this)
+    .closest('[data-permission-row]')
+    .find('input')
+    .prop('checked', $(this).prop('checked'));
+});
+
+$(function () {
+  $('[data-permission-row]').each(function () {
+    setAllInputForRow($(this));
+  });
+});

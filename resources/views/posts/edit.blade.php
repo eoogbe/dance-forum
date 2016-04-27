@@ -23,7 +23,7 @@ Edit Post
       <li>
         <label>Text</label>
 
-        <input type="hidden" name="content" value="" class="editor-text">
+        <input type="hidden" name="content" value="" data-editor-text>
 
         <div class="editor">
           {!! Purifier::clean(old('content', $post->content)) !!}

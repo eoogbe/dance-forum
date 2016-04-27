@@ -34,6 +34,7 @@ A example forum so I can learn [Laravel](http://laravel.com).
   - lock (admin)
   - hide (admin)
   - permissions (admin)
+  - subscriptions
 - Posts
   - create
   - edit (author or admin)
@@ -43,7 +44,6 @@ A example forum so I can learn [Laravel](http://laravel.com).
 ## TODO
 
 - undo/redo delete
-- subscriptions
 - approval
 - private messages
 - report spam

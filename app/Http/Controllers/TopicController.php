@@ -62,14 +62,18 @@ class TopicController extends Controller
    */
   public function store(StoreTopicRequest $request, Board $board)
   {
+    $user = $request->user();
+
     $topic = $board->topics()->create([
       'name' => $request->name,
     ]);
 
-    $request->user()->posts()->create([
+    $user->posts()->create([
       'topic_id' => $topic->id,
       'content' => $request->post_content,
     ]);
+
+    $user->subscribeTo($topic);
 
     return redirect()->route('topics.show', compact('topic'));
   }
