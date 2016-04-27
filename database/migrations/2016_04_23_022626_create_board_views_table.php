@@ -19,7 +19,7 @@ class CreateBoardViewsTable extends Migration
       $table->integer('count')->unsigned()->default(0);
       $table->timestamps();
       $table->unique(['board_id', 'user_id']);
-      $table->foreign('board_id')->references('id')->on('topics')->onDelete('cascade');
+      $table->foreign('board_id')->references('id')->on('boards')->onDelete('cascade');
       $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
     });
   }

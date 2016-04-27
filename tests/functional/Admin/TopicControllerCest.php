@@ -128,7 +128,7 @@ class TopicControllerCest
     $I->amOnRoute('topics.show', compact('topic'));
     $I->dontSee('reply');
 
-    $I->amLoggedAs($topic->firstPost()->author);
+    $I->amLoggedAs($topic->author());
     $I->dontSee('edit', 'section > ol > li a');
     $I->dontSee('delete', 'section > ol > li');
   }
@@ -149,7 +149,7 @@ class TopicControllerCest
     $I->amOnRoute('topics.show', compact('topic'));
     $I->see('reply');
 
-    $I->amLoggedAs($topic->firstPost()->author);
+    $I->amLoggedAs($topic->author());
     $I->see('edit', 'section > ol > li');
     $I->see('delete', 'section > ol > li');
   }

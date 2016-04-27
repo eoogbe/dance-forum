@@ -12,6 +12,7 @@ A example forum so I can learn [Laravel](http://laravel.com).
 - Users
   - assign roles (admin)
   - edit settings and profile
+  - cancel account
 - User roles
   - CRUD operations (admin)
   - assign users (admin)
@@ -43,7 +44,6 @@ A example forum so I can learn [Laravel](http://laravel.com).
 
 - undo/redo delete
 - subscriptions
-- remove account
 - approval
 - private messages
 - report spam

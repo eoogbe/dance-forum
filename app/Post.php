@@ -60,7 +60,7 @@ class Post extends Model
     */
    public function authorName()
    {
-     return $this->author->name;
+     return $this->author ? $this->author->name : '[deleted]';
    }
 
    /**

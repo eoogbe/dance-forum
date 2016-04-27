@@ -20,7 +20,7 @@ class AccountController extends Controller
   }
 
   /**
-   * Show the form for editing the profile of the specified resource.
+   * Show the form for editing the profile of the resource.
    *
    * @return \Illuminate\Http\Response
    */
@@ -30,7 +30,7 @@ class AccountController extends Controller
   }
 
   /**
-   * Update the profile of the specified resource in storage.
+   * Update the profile of the resource in storage.
    *
    * @param  ProfileRequest  $request
    * @return \Illuminate\Http\Response
@@ -45,7 +45,7 @@ class AccountController extends Controller
   }
 
   /**
-   * Show the form for editing the settings of the specified resource.
+   * Show the form for editing the settings of the resource.
    *
    * @return \Illuminate\Http\Response
    */
@@ -55,7 +55,7 @@ class AccountController extends Controller
   }
 
   /**
-   * Update the settings of the specified resource in storage.
+   * Update the settings of the resource in storage.
    *
    * @param  AccountSettingsRequest  $request
    * @return \Illuminate\Http\Response
@@ -71,5 +71,18 @@ class AccountController extends Controller
     ]));
 
     return redirect()->route('users.show', compact('user'));
+  }
+
+  /**
+   * Remove the resource from storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function destroy(Request $request)
+  {
+    $request->user()->delete();
+
+    return redirect('/');
   }
 }

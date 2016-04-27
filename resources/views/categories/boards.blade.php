@@ -9,9 +9,7 @@
           @include('posts.link', ['post' => $board->lastPost()])
           by
           <cite>
-            <a href="{{ route('users.show', ['user' => $board->lastPost()->author]) }}">
-              {{ $board->lastPost()->authorName() }}
-            </a>
+            @include('users.link', ['user' => $board->lastPost()->author])
           </cite>
           in @include('topics.link', ['topic' => $board->lastPost()->topic])
         </p>

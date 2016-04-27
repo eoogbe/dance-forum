@@ -27,6 +27,7 @@ class AddBoardIdToTopicsTable extends Migration
   public function down()
   {
     Schema::table('topics', function (Blueprint $table) {
+      $table->dropForeign(['board_id']);
       $table->dropColumn('board_id');
     });
   }

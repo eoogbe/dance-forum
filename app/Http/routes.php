@@ -33,6 +33,10 @@ Route::put('account', [
   'as' => 'account.updateSettings',
   'uses' => 'AccountController@updateSettings',
 ]);
+Route::delete('account', [
+  'as' => 'account.destroy',
+  'uses' => 'AccountController@destroy',
+]);
 Route::post('posts/{id}/restore', ['as' => 'posts.restore', 'uses' => 'PostController@restore']);
 
 Route::resource('users', 'UserController', ['only' => 'show']);

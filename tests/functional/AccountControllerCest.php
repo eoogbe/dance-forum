@@ -76,4 +76,25 @@ class AccountControllerCest
     $I->amOnRoute('account.editSettings');
     $I->seeCurrentUrlEquals('/login');
   }
+
+  public function destroyAccount(FunctionalTester $I)
+  {
+    $I->am('User');
+    $I->wantTo('cancel my account');
+
+    $topic = $I->createTopic();
+    $user = $topic->author();
+    $I->amLoggedAs($user);
+
+    $I->amOnRoute('account.editSettings');
+    $I->click('Cancel Your Account');
+
+    $I->seeCurrentUrlEquals('/');
+    $I->dontSee($user->name);
+    $I->dontSeeAuthentication();
+    $I->amOnRoute('topics.show', compact('topic'));
+    $I->dontSee($user->name);
+    $I->see('[deleted]');
+    $I->see($topic->firstPost()->content);
+  }
 }

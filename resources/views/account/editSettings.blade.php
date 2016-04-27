@@ -104,5 +104,15 @@ Edit Account Settings
 
     <button type="submit">Update Settings</button>
   </form>
+
+  <section>
+    <h3>Cancel Account</h3>
+
+    <form method="post" action="{{ route('account.destroy') }}">
+      {!! method_field('DELETE') !!}
+      {!! csrf_field() !!}
+      <button type="submit">Cancel Your Account</button>
+    </form>
+  </section>
 </section>
 @endsection

@@ -39,9 +39,7 @@
           <p>
             created by
             <cite>
-              <a href="{{ route('users.show', ['user' => $topic->author()]) }}">
-                {{ $topic->author()->name }}
-              </a>
+              @include('users.link', ['user' => $topic->author()])
             </cite>
           </p>
           @if ($topic->lastPost())
@@ -50,9 +48,7 @@
               @include('posts.link', ['post' => $topic->lastPost()])
               by
               <cite>
-                <a href="{{ route('users.show', ['user' => $topic->lastPost()->author]) }}">
-                  {{ $topic->lastPost()->authorName() }}
-                </a>
+                @include('users.link', ['user' => $topic->lastPost()->author])
               </cite>
             </p>
           @endif

@@ -13,11 +13,11 @@
     <h2>{{ $topic->name }}</h2>
 
     <ul>
-      <li>
-        @can('addPost', $topic)
+      @can('addPost', $topic)
+        <li>
           <a href="{{ route('topics.posts.create', compact('topic')) }}">reply</a>
-        @endcan
-      </li>
+        </li>
+      @endcan
       @can('updatePermissions', $topic)
         <li>
           <a href="{{ route('admin.topics.editPermissions', compact('topic')) }}">
@@ -91,16 +91,16 @@
           <footer>
             <p>
               <cite>
-                <a href="{{ route('users.show', ['user' => $post->author]) }}">
-                  {{ $post->authorName() }}
-                </a>
+                @include('users.link', ['user' => $post->author])
               </cite>
             </p>
-            @if ($post->author->pronouns)
-              <p>{{ $post->author->pronouns }} pronouns</p>
-            @endif
-            @if ($post->author->description)
-              <div>{!! Purifier::clean($post->author->description) !!}</div>
+            @if ($post->author)
+              @if ($post->author->pronouns)
+                <p>{{ $post->author->pronouns }} pronouns</p>
+              @endif
+              @if ($post->author->description)
+                <div>{!! Purifier::clean($post->author->description) !!}</div>
+              @endif
             @endif
             <p>@include('posts.link')</p>
             @unless ($post->trashed())
