@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
@@ -14,6 +15,18 @@ class Role extends Model
    * @var array
    */
   protected $fillable = ['name'];
+
+  /**
+  * Scope a query to only include roles that are auto-assigned.
+  *
+  * @return \Illuminate\Database\Eloquent\Builder
+   */
+  public function scopeAutoAssigned($query)
+  {
+    return $query
+      ->join('auto_assigned_roles', 'roles.id', '=', 'auto_assigned_roles.id')
+      ->select('roles.*');
+  }
 
   /**
   * Get all the users for the role.
@@ -73,6 +86,26 @@ class Role extends Model
       } else if ($this->permissions->where('id', $permission->id)->exists()) {
         $this->deny($permission->name);
       }
+    }
+  }
+
+  /**
+   * Check if the role is automatically assigned to all new registered users.
+   */
+  public function isAutoAssigned()
+  {
+    return DB::table('auto_assigned_roles')->where('id', $this->id)->exists();
+  }
+
+  /**
+   * Set the auto assigned status of the role to the given value.
+   */
+  public function setAutoAssigned($isAutoAssigned)
+  {
+    if ($isAutoAssigned) {
+      DB::table('auto_assigned_roles')->insert(['id' => $this->id]);
+    } else {
+      DB::table('auto_assigned_roles')->where('id', $this->id)->delete();
     }
   }
 }

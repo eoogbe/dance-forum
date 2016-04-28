@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddProfileColumnsToUsersTable extends Migration
+class AddBlockedStatusIdToUsersTable extends Migration
 {
   /**
    * Run the migrations.
@@ -13,8 +13,8 @@ class AddProfileColumnsToUsersTable extends Migration
   public function up()
   {
     Schema::table('users', function (Blueprint $table) {
-      $table->string('pronouns')->nullable();
-      $table->text('description')->nullable();
+      $table->integer('blocked_status_id')->unsigned()->nullable();
+      $table->foreign('blocked_status_id')->references('id')->on('blocked_statuses')->onDelete('cascade');
     });
   }
 
@@ -26,7 +26,8 @@ class AddProfileColumnsToUsersTable extends Migration
   public function down()
   {
     Schema::table('users', function (Blueprint $table) {
-      $table->dropColumn(['pronouns', 'description']);
+      $table->dropForeign(['blocked_status_id']);
+      $table->dropColumn('blocked_status_id');
     });
   }
 }

@@ -82,6 +82,8 @@ class RoleController extends Controller
       $role->permissions()->attach($permissionIds);
     }
 
+    $role->setAutoAssigned($request->auto_assigned);
+
     return redirect()->route('admin.roles.show', compact('role'));
   }
 

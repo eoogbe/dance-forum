@@ -34,6 +34,14 @@ class User extends Authenticatable
   protected $dates = ['login_at'];
 
   /**
+   * Get the ids of users that are neither banned nor shadow banned.
+   */
+  public static function unblockedIds()
+  {
+    return static::whereNull('blocked_status_id')->pluck('id');
+  }
+
+  /**
    * Get the route key for the model.
    *
    * @return string
@@ -57,6 +65,14 @@ class User extends Authenticatable
   public function subscriptions()
   {
     return $this->hasMany(Subscription::class);
+  }
+
+  /**
+   * Get the blocked status for the user.
+   */
+  public function blockedStatus()
+  {
+    return $this->belongsTo(BlockedStatus::class);
   }
 
   /**
@@ -88,6 +104,10 @@ class User extends Authenticatable
    */
   public function isAllowedTo($name)
   {
+    if ($this->isBanned()) {
+      return false;
+    }
+
     $names = Permission::parseNames($name);
     $userPermission = $this->permissions()->byNames($names)->first();
 
@@ -118,5 +138,21 @@ class User extends Authenticatable
   public function isSubscribedTo($topic)
   {
     return $this->subscriptions()->where('topic_id', $topic->id)->exists();
+  }
+
+  /**
+   * Check if the user is banned.
+   */
+  public function isBanned()
+  {
+    return $this->blockedStatus ? $this->blockedStatus->name === 'banned' : false;
+  }
+
+  /**
+   * Check if the user is shadow banned.
+   */
+  public function isShadowBanned()
+  {
+    return $this->blockedStatus ? $this->blockedStatus->name === 'shadow banned' : false;
   }
 }

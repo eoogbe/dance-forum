@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Auth;
+use Gate;
+use App\Topic;
 use App\Http\Requests\Request;
 
 class StoreTopicRequest extends Request
@@ -14,7 +15,7 @@ class StoreTopicRequest extends Request
    */
   public function authorize()
   {
-    return Auth::check();
+    return Gate::allows('store', Topic::class);
   }
 
   /**

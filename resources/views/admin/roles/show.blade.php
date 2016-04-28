@@ -12,6 +12,10 @@ Manage {{ $role->name }}
 <section>
   <h2>Manage {{ $role->name }}</h2>
 
+  @if ($role->isAutoAssigned())
+    <p>Automatically assigned to all new registered users</p>
+  @endif
+
   <ul>
     @can('update', $role)
       <li><a href="{{ route('admin.roles.edit', compact('role')) }}">edit</a></li>

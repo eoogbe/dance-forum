@@ -18,11 +18,22 @@ class TopicPolicy
   * @param  Topic  $topic
   * @return bool
   */
-  public function show(User $user, Topic $topic)
+  public function show($user, Topic $topic)
   {
-    return !$topic->isHidden() ||
-      $user->isAllowedTo("update.topic.{$topic->id}") ||
-      $this->isAllowedTo("delete.topic.{$topic->id}");
+    return !$topic->isHidden() || $user &&
+      ($user->isAllowedTo("update.topic.{$topic->id}") ||
+      $user->isAllowedTo("delete.topic.{$topic->id}"));
+  }
+
+  /**
+  * Determine if the given user can store a newly created topic.
+  *
+  * @param  User  $user
+  * @return bool
+  */
+  public function store(User $user)
+  {
+    return $user->isAllowedTo('create.topic');
   }
 
   /**
@@ -62,7 +73,7 @@ class TopicPolicy
    */
   public function addPost(User $user, Topic $topic)
   {
-    return !$topic->isLocked();
+    return !$topic->isLocked() && $user->isAllowedTo('create.post');
   }
 
   /**

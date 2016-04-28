@@ -139,6 +139,10 @@ Route::group([
     'as' => 'admin.users.updateRoles',
     'uses' => 'UserController@updateRoles'
   ]);
+  Route::post('users/{user}/ban', [
+    'as' => 'admin.users.ban',
+    'uses' => 'UserController@ban'
+  ]);
   Route::get('roles/{role}/users/edit', [
     'as' => 'admin.roles.editUsers',
     'uses' => 'RoleController@editUsers'

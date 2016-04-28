@@ -50,6 +50,8 @@ class TopicController extends Controller
    */
   public function create(Board $board)
   {
+    $this->authorize('store', Topic::class);
+
     return view('topics.create', compact('board'));
   }
 

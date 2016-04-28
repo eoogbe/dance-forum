@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\BlockedStatus;
 use App\Role;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -48,6 +49,29 @@ class UserController extends Controller
       'permissions' => $user->allowedPermissions(),
       'roles' => $user->roles()->orderBy('name')->get(),
     ]);
+  }
+
+  /**
+   * Sets the blocked status of the specified resource.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  User  $user
+   * @return \Illuminate\Http\Response
+   */
+  public function ban(Request $request, User $user)
+  {
+    $this->authorize($user);
+
+    if ($request->blocked_status) {
+      $blockedStatus = BlockedStatus::where('name', $request->blocked_status)->firstOrFail();
+      $user->blockedStatus()->associate($blockedStatus);
+    } else {
+      $user->blockedStatus()->dissociate();
+    }
+
+    $user->save();
+
+    return redirect()->route('admin.users.show', compact('user'));
   }
 
   /**

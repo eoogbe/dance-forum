@@ -22,6 +22,17 @@
     @endif
   </li>
   <li>
+    <input
+        type="checkbox"
+        name="auto_assigned"
+        id="auto-assigned"
+        @if (old('auto_assigned', $role->isAutoAssigned()))
+          checked
+        @endif
+    >
+    <label for="auto-assigned">Automatically Assign to All New Registered Users</label>
+  </li>
+  <li>
     <fieldset aria-invalid="{{ var_export($errors->has('permission_ids[]'), true) }}">
       <legend>Permissions</legend>
       <ul>

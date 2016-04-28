@@ -27,9 +27,12 @@ class BoardController extends Controller
 
     $perPage = 15;
     $page = Paginator::resolveCurrentPage();
-    $items = $board->sortedTopics()->skip(($page - 1) * $perPage)->take($perPage)->get();
+    $topics = $board->sortedTopics()->get()->filter(function ($topic) {
+      return policy($topic)->show(Auth::user(), $topic);
+    });
+    $items = $topics->slice(($page - 1) * $perPage, $perPage);
 
-    $paginatedTopics = new LengthAwarePaginator($items, $board->topicCount(), $perPage, $page, [
+    $paginatedTopics = new LengthAwarePaginator($items, $topics->count(), $perPage, $page, [
       'path'  => $request->url(),
       'query' => $request->query(),
     ]);

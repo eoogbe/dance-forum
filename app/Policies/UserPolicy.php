@@ -34,18 +34,6 @@ class UserPolicy
   }
 
   /**
-  * Determine if the given authethicated user can update the given user account.
-  *
-  * @param  User  $user
-  * @param  User  $model
-  * @return bool
-  */
-  public function update(User $user, User $model)
-  {
-    return $user->id === $model->id;
-  }
-
-  /**
   * Determine if the given authethicated user can update roles for the given user account.
   *
   * @param  User  $user
@@ -53,6 +41,18 @@ class UserPolicy
   * @return bool
   */
   public function updateRoles(User $user, User $model)
+  {
+    return $user->isAllowedTo("update.user.{$model->id}");
+  }
+
+  /**
+  * Determine if the given authethicated user can ban the given user account.
+  *
+  * @param  User  $user
+  * @param  User  $model
+  * @return bool
+  */
+  public function ban(User $user, User $model)
   {
     return $user->isAllowedTo("update.user.{$model->id}");
   }

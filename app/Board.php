@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -55,6 +56,11 @@ class Board extends Model
   {
     return $this->topics()
       ->join('posts', 'topics.id', '=', 'posts.topic_id')
+      ->where(function ($query) {
+          $query->whereIn('posts.author_id', User::unblockedIds())
+            ->orWhereNull('posts.author_id')
+            ->orWhere('posts.author_id', Auth::id());
+        })
       ->orderBy(DB::raw('(CASE WHEN topics.pinned_at IS NULL THEN 1 ELSE 0 END)'))
       ->orderBy('posts.created_at', 'desc')
       ->select('topics.*')

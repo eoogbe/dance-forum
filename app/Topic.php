@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class Topic extends Model
@@ -63,11 +64,16 @@ class Topic extends Model
   }
 
   /**
-   * Get a paginator for all the posts written for the topic including the trashed ones.
+   * Get a paginator for all the posts written for the topic including the trashed ones and
+   * excluding the ones written by banned users that are not the current user.
    */
   public function paginatedPosts()
   {
-    return $this->postsWithTrashed()->paginate();
+    return $this->postsWithTrashed()->where(function ($query) {
+        $query->whereIn('posts.author_id', User::unblockedIds())
+          ->orWhereNull('posts.author_id')
+          ->orWhere('posts.author_id', Auth::id());
+      })->paginate();
   }
 
   /**

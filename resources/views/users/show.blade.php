@@ -8,14 +8,18 @@
 <section>
   <header>
     <h2>{{ $user->name }}</h2>
-    @can ('update', $user)
+    @if ($user->id === Auth::id())
       <ul>
         <li><a href="{{ route('account.editProfile') }}">edit profile</a></li>
         <li><a href="{{ route('subscriptions.edit') }}">edit subscriptions</a></li>
         <li><a href="{{ route('account.editSettings') }}">edit account settings</a></li>
       </ul>
-    @endcan
+    @endif
   </header>
+
+  @if ($user->id === Auth::id() && $user->isBanned())
+    <p><strong>Your account has been suspended.</strong></p>
+  @endif
 
   @if ($user->pronouns)
     <p>{{ $user->pronouns }} pronouns</p>

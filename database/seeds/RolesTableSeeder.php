@@ -16,5 +16,11 @@ class RolesTableSeeder extends Seeder
     Role::create(['name' => 'Admin'])->attachPermission([
       'create', 'update', 'delete', 'viewAdminPanel', 'restore.post',
     ]);
+
+    $member = Role::create(['name' => 'Member']);
+    $member->setAutoAssigned(true);
+    $member->attachPermission([
+      'create.topic', 'create.post',
+    ]);
   }
 }

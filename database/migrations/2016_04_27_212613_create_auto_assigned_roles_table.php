@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPositionToCategoriesTable extends Migration
+class CreateAutoAssignedRolesTable extends Migration
 {
   /**
    * Run the migrations.
@@ -12,8 +12,8 @@ class AddPositionToCategoriesTable extends Migration
    */
   public function up()
   {
-    Schema::table('categories', function (Blueprint $table) {
-      $table->integer('position')->default(-1)->unique();
+    Schema::create('auto_assigned_roles', function (Blueprint $table) {
+      $table->integer('id')->unsigned()->primary();
     });
   }
 
@@ -24,8 +24,6 @@ class AddPositionToCategoriesTable extends Migration
    */
   public function down()
   {
-    Schema::table('categories', function (Blueprint $table) {
-      $table->dropColumn('position');
-    });
+    Schema::drop('auto_assigned_roles');
   }
 }

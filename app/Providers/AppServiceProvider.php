@@ -6,6 +6,8 @@ use Auth;
 use Validator;
 use Illuminate\Support\ServiceProvider;
 
+use App\User;
+use App\Role;
 use App\Post;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
   {
     Validator::extend('password', function($attribute, $value, $parameters, $validator) {
       return Auth::validate(['email' => Auth::user()->email, 'password' => $value]);
+    });
+
+    User::created(function ($user) {
+      $user->roles()->attach(Role::autoAssigned()->pluck('id')->toArray());
     });
 
     Post::created(function ($post) {

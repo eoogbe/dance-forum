@@ -55,6 +55,83 @@ class UserControllerCest
     $I->see('Access denied');
   }
 
+  public function banUser(FunctionalTester $I, \Page\Login $loginPage)
+  {
+    $I->am('Admin');
+    $I->wantTo('ban a user');
+
+    $password = str_random(12);
+    $admin = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $adminRole = $I->grabRole();
+    $admin->roles()->attach($adminRole);
+    $loginPage->login($admin->email, $password);
+
+    $user = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $topic = $I->createModel('App\Topic');
+    $post = $I->makeModel('App\Post', ['author_id' => $user->id]);
+    $topic->posts()->save($post);
+
+    $I->amOnRoute('admin.users.show', compact('user'));
+    $I->click('ban');
+
+    $I->amOnRoute('boards.show', ['board' => $topic->board]);
+    $I->dontSee($topic->name);
+
+    $I->click('logout');
+    $loginPage->login($user->email, $password);
+    $I->amOnRoute('boards.show', ['board' => $topic->board]);
+    $I->see($topic->name);
+    $I->dontSee('New Topic');
+  }
+
+  public function shadowBanUser(FunctionalTester $I, \Page\Login $loginPage)
+  {
+    $I->am('Admin');
+    $I->wantTo('shadow ban a user');
+
+    $password = str_random(12);
+    $admin = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $adminRole = $I->grabRole();
+    $admin->roles()->attach($adminRole);
+    $loginPage->login($admin->email, $password);
+
+    $user = $I->createModel('App\User', ['password' => bcrypt($password)]);
+    $topic = $I->createTopic();
+    $post = $I->makeModel('App\Post', ['author_id' => $user->id]);
+    $topic->posts()->save($post);
+
+    $I->amOnRoute('admin.users.show', compact('user'));
+    $I->click('shadow ban');
+
+    $I->amOnRoute('topics.show', compact('topic'));
+    $I->dontSee($post->content);
+
+    $I->click('logout');
+    $loginPage->login($user->email, $password);
+    $I->amOnRoute('topics.show', compact('topic'));
+    $I->see($post->content);
+    $I->see('reply');
+  }
+
+  public function unbanUser(FunctionalTester $I)
+  {
+    $I->am('Admin');
+    $I->wantTo('shadow ban a user');
+
+    $admin = $I->grabAdmin();
+    $I->amLoggedAs($admin);
+
+    $blockedStatusId = \App\BlockedStatus::where('name', 'banned')->first()->id;
+    $user = $I->createModel('App\User', ['blocked_status_id' => $blockedStatusId]);
+    $topic = $I->createTopic([], ['author_id' => $user->id]);
+
+    $I->amOnRoute('admin.users.show', compact('user'));
+    $I->click('remove ban');
+
+    $I->amOnRoute('boards.show', ['board' => $topic->board]);
+    $I->see($topic->name);
+  }
+
   public function updateUserRoles(FunctionalTester $I)
   {
     $I->am('Admin');

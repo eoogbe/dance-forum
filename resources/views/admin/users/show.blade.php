@@ -25,6 +25,31 @@ Manage {{ $user->name }}
 
   <ul>
     <li><a href="{{ route('users.show', compact('user')) }}">view profile</a></li>
+    @can('ban', $user)
+      @if ($user->blockedStatus)
+        <li>
+          <form method="post" action="{{ route('admin.users.ban', compact('user')) }}">
+            {!! csrf_field() !!}
+            <button type="submit">remove ban</button>
+          </form>
+        </li>
+      @else
+        <li>
+          <form method="post" action="{{ route('admin.users.ban', compact('user')) }}">
+            {!! csrf_field() !!}
+            <input type="hidden" name="blocked_status" value="banned">
+            <button type="submit">ban</button>
+          </form>
+        </li>
+        <li>
+          <form method="post" action="{{ route('admin.users.ban', compact('user')) }}">
+            {!! csrf_field() !!}
+            <input type="hidden" name="blocked_status" value="shadow banned">
+            <button type="submit">shadow ban</button>
+          </form>
+        </li>
+      @endif
+    @endcan
   </ul>
 
   <section>

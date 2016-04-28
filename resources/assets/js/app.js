@@ -17,7 +17,7 @@ tinymce.init({
       editor.selection.collapse(false);
     });
     editor.on('submit', function () {
-      $('[data-editor-text]').value = editor.getContent();
+      $('[data-editor-text]').val(editor.getContent());
     })
   }
 });

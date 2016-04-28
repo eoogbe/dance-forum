@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPositionToCategoriesTable extends Migration
+class CreateBlockedStatusesTable extends Migration
 {
   /**
    * Run the migrations.
@@ -12,8 +12,10 @@ class AddPositionToCategoriesTable extends Migration
    */
   public function up()
   {
-    Schema::table('categories', function (Blueprint $table) {
-      $table->integer('position')->default(-1)->unique();
+    Schema::create('blocked_statuses', function (Blueprint $table) {
+      $table->increments('id');
+      $table->string('name')->unique();
+      $table->timestamps();
     });
   }
 
@@ -24,8 +26,6 @@ class AddPositionToCategoriesTable extends Migration
    */
   public function down()
   {
-    Schema::table('categories', function (Blueprint $table) {
-      $table->dropColumn('position');
-    });
+    Schema::drop('blocked_statuses');
   }
 }

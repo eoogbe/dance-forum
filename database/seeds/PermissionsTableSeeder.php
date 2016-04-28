@@ -20,8 +20,8 @@ class PermissionsTableSeeder extends Seeder
       'update.permissions',
       'create.category', 'update.category', 'delete.category',
       'viewAdminPanel.board', 'create.board', 'update.board', 'delete.board',
-      'update.topic', 'delete.topic',
-      'update.post', 'delete.post', 'restore.post',
+      'create.topic', 'update.topic', 'delete.topic',
+      'create.post', 'update.post', 'delete.post', 'restore.post',
     ];
 
     foreach ($names as $name) {
